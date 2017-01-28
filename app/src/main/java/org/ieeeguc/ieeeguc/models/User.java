@@ -60,7 +60,7 @@ public class User{
                 @Override
                 public void onFailure(Call call, IOException e) {
 
-
+                    httpResponse.onFailure(-1,null);
                 }
 
                 @Override
@@ -78,7 +78,7 @@ public class User{
                             JSONObject responseBody = new JSONObject(response.body().toString());
                             httpResponse.onSuccess(statusCode,responseBody);
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            httpResponse.onFailure(-500,null);
                         }
 
                     }
@@ -93,7 +93,7 @@ public class User{
                             httpResponse.onFailure(statusCode,responseBody);
                         }catch (JSONException e){
 
-                            e.printStackTrace();
+                            httpResponse.onFailure(-500,null);
                         }
 
                     }
