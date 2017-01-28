@@ -3,6 +3,7 @@ package org.ieeeguc.ieeeguc.models;
 import android.util.Log;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -17,36 +18,24 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class User{
-
-
-    private String type;
-    private String email;
-    private String password;
-    private String first_name;
-    private String last_name;
-    private String birthdate;
-    private String gender;
-    private String IEEE_membership_ID;
-
-
     /**
-     *
+     * This method is called when the user performs an editing operation on his profile.
      * @param token The access token which's provided when a user logs in.
      * @param oldPassword the current user's account password.
      * @param newPassword the new password that will override the old one.
      * @param IEEE_membership_ID
-     * @param HTTPResponse Used to control the flow of the app after the editProfile is performed.
+     * @param httpResponse Used to control the flow of the app after the editProfile is performed.
      */
 
     public void editProfile(String token,
                             String oldPassword,
                             String newPassword,
                             String IEEE_membership_ID,
-                            HTTPResponse HTTPResponse){
+                            final HTTPResponse httpResponse){
 
         if(oldPassword == password && newPassword.length() >= 6){
 
-            // The user entered the right old passwrod and a valid new password,
+            // The user entered the right old password and a valid new password,
             // then we the app will perform with sending the editing request to the server.
 
             OkHttpClient client = new OkHttpClient();
@@ -71,31 +60,50 @@ public class User{
                 @Override
                 public void onFailure(Call call, IOException e) {
 
-                    e.printStackTrace();
+
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
+
+                    //Getting the status code.
+                    int statusCode = response.code();
+                    String code = String.valueOf(statusCode);
+
+                    if(code.charAt(0) == 2){
+
+                        // The received code is of the format 2xx, and the call was successful.
+
+                        try {
+                            JSONObject responseBody = new JSONObject(response.body().toString());
+                            httpResponse.onSuccess(statusCode,responseBody);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    else{
+
+                        // The received code is of the format 3xx or 4xx or 5xx,
+                        // and the call wasn't successful.
+
+                        try{
+                            JSONObject responseBody = new JSONObject(response.body().toString());
+                            httpResponse.onFailure(statusCode,responseBody);
+                        }catch (JSONException e){
+
+                            e.printStackTrace();
+                        }
+
+                    }
 
 
 
                 }
             });
 
-        }else if(newPassword.length() < 6){
-
-            //TODO:Should be replaced with a toast or a small textView indicating the log message.
-            Log.v("org.ieeeguc.ieeeguc","password should contain at least 6 characters");
-
-        }else{
-
-            //TODO:Should be replaced with a toast or a small textView indicating the log message.
-            Log.v("org.ieeeguc.ieeeguc","Old password incorrect !");
         }
-
-
-
-
 
     }
 }
