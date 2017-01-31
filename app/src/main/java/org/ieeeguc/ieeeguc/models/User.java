@@ -14,9 +14,6 @@ private  String firstName;
     private int committeeID;
     private String committeeName;
     private int id;
-
-
-
     private String phoneNumber;
     private JSONObject settings;
 
@@ -100,6 +97,6 @@ private  String firstName;
         return committeeName;
     }
 
-   
+
 
 }
