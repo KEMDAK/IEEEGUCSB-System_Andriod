@@ -5,5 +5,5 @@ package org.ieeeguc.ieeeguc.models;
  */
 
 public enum Gender {
-    Male,Female;
+    MALE,FEMALE;
 }

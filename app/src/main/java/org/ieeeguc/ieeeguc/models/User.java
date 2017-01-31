@@ -4,9 +4,9 @@ import org.json.JSONObject;
 
 import java.util.Date;
 public class User {
-    private  type Type;
+    private Type Type;
 private  String firstName;
-    private  String LastName;
+    private  String lastName;
     private String email;
     private Gender gender;
     private Date birthdate;
@@ -18,18 +18,21 @@ private  String firstName;
     private JSONObject settings;
 
 
-    public User( type Type, String firstName, String lastName, String email, Gender gender, Date birthdate, String ieeeMembershipID,
-                 String PhoneNumber){
-        this.Type=Type;
-        this.firstName=firstName;
-        this.LastName=lastName;
-        this.gender=gender;
-        this.birthdate=birthdate;
-        this.email=email;
-        this.ieeeMembershipID=ieeeMembershipID;
-        this.phoneNumber=phoneNumber;
-
+    public User(org.ieeeguc.ieeeguc.models.Type type, String firstName, String lastName, Gender gender, String email, Date birthdate, String ieeeMembershipID, int committeeID, String committeeName, int id, String phoneNumber, JSONObject settings) {
+        Type = type;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.email = email;
+        this.birthdate = birthdate;
+        this.ieeeMembershipID = ieeeMembershipID;
+        this.committeeID = committeeID;
+        this.committeeName = committeeName;
+        this.id = id;
+        this.phoneNumber = phoneNumber;
+        this.settings = settings;
     }
+
     public int getId() {
         return id;
     }
@@ -46,7 +49,7 @@ private  String firstName;
     }
 
 
-    public type getType() {
+    public org.ieeeguc.ieeeguc.models.Type getType() {
         return Type;
     }
 
@@ -58,7 +61,7 @@ private  String firstName;
 
 
     public String getLastName() {
-        return LastName;
+        return lastName;
     }
 
 
