@@ -6,7 +6,7 @@ package org.ieeeguc.ieeeguc.models;
 
 public enum Type {
 
-    ADMIN,HIGHBOARD,MEMBER,UPPERBOARD
+    ADMIN,HIGH_BOARD,MEMBER,UPPER_BOARD
 
 
 }
