@@ -60,6 +60,7 @@ public class User{
                 @Override
                 public void onFailure(Call call, IOException e) {
 
+                    //No Internet Connection.
                     httpResponse.onFailure(-1,null);
                 }
 
@@ -70,7 +71,7 @@ public class User{
                     int statusCode = response.code();
                     String code = String.valueOf(statusCode);
 
-                    if(code.charAt(0) == 2){
+                    if(code.charAt(0) == '2'){
 
                         // The received code is of the format 2xx, and the call was successful.
 
