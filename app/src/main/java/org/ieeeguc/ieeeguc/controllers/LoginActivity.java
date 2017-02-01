@@ -51,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static org.ieeeguc.ieeeguc.models.User.login;
 
 /**
  * A login screen that offers login via email/password.
@@ -78,15 +79,18 @@ public class LoginActivity extends AppCompatActivity {
         body.put("email",emailText) ;
         body.put("password",passwordText) ;
 
+
         send.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (emailText != null && passwordText != null) {
-                    Login(emailText, passwordText, new HTTPResponse() {
+                    login(emailText, passwordText, new HTTPResponse() {
 
                         @Override
                         public void onSuccess(int statusCode, JSONObject body)  {
+                            Log.i("2","");
                             if (statusCode == 200) {
+
 
                                 try {
                                     Token = body.getString("token");
@@ -105,6 +109,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(int statusCode, JSONObject body) {
+                            Log.i("1","");
 
                             if(statusCode == 401)
                             {
@@ -118,10 +123,14 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     if (emailText != null) {
                         Toast.makeText(getApplicationContext(), "You forget to write your password", Toast.LENGTH_LONG).show();
+                        Log.i("3","");
                     } else {
                         if(passwordText != null)
-                        Toast.makeText(getApplicationContext(), "You forget to write your email", Toast.LENGTH_LONG).show();
+                        { Toast.makeText(getApplicationContext(), "You forget to write your email", Toast.LENGTH_LONG).show();
+                        Log.i("4","");}
+
                         else{
+                            Log.i("5","");
                             Toast.makeText(getApplicationContext(), "You forget to write your email and password", Toast.LENGTH_LONG).show();
                         }
                     }
