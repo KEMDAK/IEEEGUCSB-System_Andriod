@@ -1,7 +1,9 @@
 package org.ieeeguc.ieeeguc.controllers;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -62,7 +64,13 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
         };
 
         loggedInUser.logout(token, logoutHTTPResponse);
-        // TODO: Empty the sharedPreferences variable when it's tag is known
+        // Empty the sharedPreferences variable when the user is logged out.
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("Token",null);
+        editor.putString("LoggedInUser",null);
+        editor.commit();
+
+
     }
 
     @Override
@@ -77,6 +85,7 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
             logout();
         }
 
+        // Closes the drawer menu after the item is selected.
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
         drawer.closeDrawer(GravityCompat.START);
         return true;
