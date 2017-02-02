@@ -1,5 +1,6 @@
 package org.ieeeguc.ieeeguc.models;
 
+
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,6 +14,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+
 
 public class User{
 
@@ -97,12 +100,13 @@ public class User{
 
     /**
      * This method is called when the user performs an editing operation on his profile.
-     * @param token The access token which's provided when a user logs in.
-     * @param oldPassword the current user's account password.
-     * @param newPassword the new password that will override the old one.
-     * @param IeeeMembershipID The IEEE Membership id of the member.
-     * @param phoneNumber The user's current phone number.
-     * @param httpResponse Used to control the flow of the app after the editProfile is performed.
+     * @param {String} token [user's token]
+     * @param {String} oldPassword [user's current password]
+     * @param {String} newPassword [user's new password]
+     * @param {String} IeeeMembershipID [user's IEEE membership id]
+     * @param {String} phoneNumber [user's phone number]
+     * @param {HTTPResponse} httpResponse [HTTPResponse interface instance]
+     * @return {void}
      */
 
     public void editProfile(String token,
@@ -112,17 +116,11 @@ public class User{
                             String phoneNumber,
                             final HTTPResponse httpResponse) {
 
-        if (newPassword.length() >= 6) {
-
-            // The user entered a valid new password,
-            // then the app will perform with sending the editing request to the server.
-
             OkHttpClient client = new OkHttpClient();
             HashMap<String, String> body = new HashMap<>();
             body.put("old_password",oldPassword);
             body.put("new_password",newPassword);
             body.put("IEEE_membership_ID",IeeeMembershipID);
-            //TODO: Check what the server expects for the phone number.
             body.put("phone_number",phoneNumber);
 
 
@@ -152,10 +150,13 @@ public class User{
                         // The received code is of the format 2xx, and the call was successful.
 
                         try {
+
                             JSONObject responseBody = new JSONObject(response.body().toString());
                             httpResponse.onSuccess(statusCode, responseBody);
+
                         } catch (JSONException e) {
-                            httpResponse.onFailure(-500, null);
+
+                            httpResponse.onFailure(500, null);
                         }
 
                     } else {
@@ -168,7 +169,7 @@ public class User{
                             httpResponse.onFailure(statusCode, responseBody);
                         } catch (JSONException e) {
 
-                            httpResponse.onFailure(-500, null);
+                            httpResponse.onFailure(500, null);
                         }
 
                     }
@@ -178,17 +179,23 @@ public class User{
             });
 
         }
-    }
+
 
         /**
-         * This method is called after the user logouts
+         * This method is called when the user logs out.
          * @param  {String}        token         [token of the user]
          * @param  {HTTPResponse}  httpResponse  [httpResponse interface instance]
          * @return {void}
          */
         public void logout(String token, final HTTPResponse httpResponse){
             OkHttpClient ok = new OkHttpClient();
-            Request request = new Request.Builder().addHeader("Authorization",token).addHeader("user_agent","Android").build();
+            Request request = new Request.Builder()
+                    .addHeader("Authorization",token)
+                    .addHeader("user_agent","Android")
+                    .url("http://ieeeguc.org/api/logout")
+                    .build();
+
+
 
 
             ok.newCall(request).enqueue(new Callback() {
@@ -202,6 +209,7 @@ public class User{
 
                     int code = response.code();
                     String body = response.body().string();
+
                     try {
                         JSONObject j = new JSONObject(body);
                         if(code/100 == 2)
@@ -213,7 +221,7 @@ public class User{
                             httpResponse.onFailure(code,j);
                         }
                     } catch (JSONException e) {
-                        httpResponse.onFailure(-1,null);
+                        httpResponse.onFailure(500,null);
                     }
                 }
             });
