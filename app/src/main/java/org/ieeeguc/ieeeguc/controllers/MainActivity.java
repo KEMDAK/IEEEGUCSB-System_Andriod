@@ -1,26 +1,28 @@
 package org.ieeeguc.ieeeguc.controllers;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
 import org.ieeeguc.ieeeguc.models.User;
 import org.json.JSONObject;
+
 
 public class MainActivity extends Activity implements NavigationView.OnNavigationItemSelectedListener {
 
     public static User loggedInUser;
     public static String token;
     public NavigationView navigationView;
+    private SharedPreferences spToken;
+    private SharedPreferences spLoggedInUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +30,11 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
         setContentView(R.layout.activity_main);
 
         /* loading the logged in user and the token from the shared preferences */
-
+        token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoibG9naW4tdG9rZW4iLCJ1c2VyQWdlbnQiOiJXZWIiLCJ1c2VySWQiOjEsImV4cCI6MTQ5Mzc0ODUyNjc3NCwiaWF0IjoxNDg1OTcyNTI2fQ.fIAn_gbyi_AUf6V54DOvahzwxSgtk3Hyr8UHXxx_aas";
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        loggedInUser = new User();
 
     }
 
@@ -66,11 +70,15 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
 
         loggedInUser.logout(token, logoutHTTPResponse);
         // Empty the sharedPreferences variable when the user is logged out.
-        token = null;
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("Token",token);
-        editor.putString("LoggedInUser",null);
-        editor.commit();
+        token = "";
+        SharedPreferences.Editor editorToken = spToken.edit();
+        SharedPreferences.Editor editorLoggedInUser = spLoggedInUser.edit();
+        editorToken.putString("Token",token);
+        editorLoggedInUser.putString("LoggedInUser","");
+        editorToken.commit();
+        editorLoggedInUser.commit();
+
+        Log.i(token,spToken.getString("Token","000"));
 
 
     }
