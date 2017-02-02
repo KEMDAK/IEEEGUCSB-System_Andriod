@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Date;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -22,42 +23,119 @@ import static android.view.View.Y;
 public class User {
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
-public static void login(String email , String password ,final HTTPResponse HTTPR){
-    final JSONObject json = new JSONObject();
-    try{
-        json.put("email",email);
-        json.put("password",password);
-    }catch(JSONException e){
-        e.printStackTrace();
+    private int id;
+    private Type type;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private Gender gender;
+    private Date birthdate;
+    private String ieeeMembershipID;
+    private int committeeID;
+    private String committeeName;
+    private String phoneNumber;
+    private JSONObject settings;
+
+
+    public User(int id, Type type, String firstName, String lastName, Gender gender, String email, Date birthdate, String ieeeMembershipID, int committeeID, String committeeName, String phoneNumber, JSONObject settings) {
+        this.type = type;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.email = email;
+        this.birthdate = birthdate;
+        this.ieeeMembershipID = ieeeMembershipID;
+        this.committeeID = committeeID;
+        this.committeeName = committeeName;
+        this.id = id;
+        this.phoneNumber = phoneNumber;
+        this.settings = settings;
     }
-    OkHttpClient client = new OkHttpClient();
-    RequestBody body = RequestBody.create(JSON, json.toString());
-    Request request = new Request.Builder()
-            .url("http://ieeeguc.org/api/login")
-            .header("user_agent","Android")
-            .post(body)
-            .build();
-    client.newCall(request).enqueue(new Callback() {
-        public void onFailure(Call call, IOException e) {
+
+    public int getId() {
+        return id;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public JSONObject getSettings() {
+        return settings;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Date getBirthdate() {
+        return birthdate;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public String getIeeeMembershipID() {
+        return ieeeMembershipID;
+    }
+
+    public int getCommitteeID() {
+        return committeeID;
+    }
+
+    public String getCommitteeName() {
+        return committeeName;
+    }
+
+    public static void login(String email, String password, final HTTPResponse HTTPR) {
+        final JSONObject json = new JSONObject();
+        try {
+            json.put("email", email);
+            json.put("password", password);
+        } catch (JSONException e) {
             e.printStackTrace();
         }
-        @Override
-        public void onResponse(Call call, final Response response) throws IOException {
-            try {
-                String responseData = response.body().string();
-                JSONObject json = new JSONObject(responseData);
-                int x = response.code();
-                String y = Integer.toString(x);
-                if(y.charAt(0)== '2'){
-                    HTTPR.onSuccess(response.code(),json);
-                }
-                else{
-                    HTTPR.onFailure(response.code(),json);
-                }
-            } catch (JSONException e) {
-                   HTTPR.onFailure(response.code(),json);
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(JSON, json.toString());
+        Request request = new Request.Builder()
+                .url("http://ieeeguc.org/api/login")
+                .header("user_agent", "Android")
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
             }
-        }
-    });
-}
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                try {
+                    String responseData = response.body().string();
+                    JSONObject json = new JSONObject(responseData);
+                    int x = response.code();
+                    String y = Integer.toString(x);
+                    if (y.charAt(0) == '2') {
+                        HTTPR.onSuccess(response.code(), json);
+                    } else {
+                        HTTPR.onFailure(response.code(), json);
+                    }
+                } catch (JSONException e) {
+                    HTTPR.onFailure(response.code(), json);
+                }
+            }
+        });
+    }
 }
