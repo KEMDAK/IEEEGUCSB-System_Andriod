@@ -1,11 +1,9 @@
 package org.ieeeguc.ieeeguc.controllers;
 
 import android.os.Bundle;
-import android.widget.Toast;
 import android.support.v7.app.AppCompatActivity;
-import org.ieeeguc.ieeeguc.HTTPResponse;
+
 import org.ieeeguc.ieeeguc.R;
-import org.json.JSONObject;
 
 /**
  * A login screen that offers login via email/password.
