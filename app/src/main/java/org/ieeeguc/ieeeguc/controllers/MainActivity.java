@@ -30,6 +30,7 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
         /* loading the logged in user and the token from the shared preferences */
 
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
     }
 
@@ -65,8 +66,9 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
 
         loggedInUser.logout(token, logoutHTTPResponse);
         // Empty the sharedPreferences variable when the user is logged out.
+        token = null;
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("Token",null);
+        editor.putString("Token",token);
         editor.putString("LoggedInUser",null);
         editor.commit();
 
