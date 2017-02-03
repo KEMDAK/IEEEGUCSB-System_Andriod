@@ -21,16 +21,16 @@ import static android.view.View.Y;
 public class User {
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
-public static void login(String email , String password ,final HTTPResponse HTTPR){
-    final JSONObject json = new JSONObject();
+public static void login(String email , String password ,final HTTPResponse HTTP_RESPONSE){
+    final JSONObject jsonB = new JSONObject();
     try{
-        json.put("email",email);
-        json.put("password",password);
+        jsonB.put("email",email);
+        jsonB.put("password",password);
     }catch(JSONException e){
         e.printStackTrace();
     }
     OkHttpClient client = new OkHttpClient();
-    RequestBody body = RequestBody.create(JSON, json.toString());
+    RequestBody body = RequestBody.create(JSON, jsonB.toString());
     Request request = new Request.Builder()
             .url("http://ieeeguc.org/api/login")
             .header("user_agent","Android")
@@ -48,13 +48,13 @@ public static void login(String email , String password ,final HTTPResponse HTTP
                 int x = response.code();
                 String y = Integer.toString(x);
                 if(y.charAt(0)== '2'){
-                    HTTPR.onSuccess(response.code(),json);
+                    HTTP_RESPONSE.onSuccess(response.code(),json);
                 }
                 else{
-                    HTTPR.onFailure(response.code(),json);
+                    HTTP_RESPONSE.onFailure(response.code(),json);
                 }
             } catch (JSONException e) {
-                   HTTPR.onFailure(response.code(),json);
+                   HTTP_RESPONSE.onFailure(response.code(),null);
             }
         }
     });

@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static org.ieeeguc.ieeeguc.models.User.login;
 
 /**
  * A login screen that offers login via email/password.
@@ -81,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (emailText != null && passwordText != null) {
-                    Login(emailText, passwordText, new HTTPResponse() {
+                    login(emailText, passwordText, new HTTPResponse() {
 
                         @Override
                         public void onSuccess(int statusCode, JSONObject body)  {
