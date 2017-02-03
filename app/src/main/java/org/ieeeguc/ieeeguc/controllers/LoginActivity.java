@@ -2,7 +2,9 @@ package org.ieeeguc.ieeeguc.controllers;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.AsyncTask;
@@ -54,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         send.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "waiting a reponse from the server", Toast.LENGTH_LONG).show();
+
                 String emailText = email.getText().toString() ;
                 String passwordText = password.getText().toString() ;
 
@@ -113,12 +115,30 @@ public class LoginActivity extends AppCompatActivity {
                         public void onFailure(int statusCode, JSONObject body) {
                             Log.i("1","failed");
 
+
                             if(statusCode == 401)
                             {
                                 Log.i("1","your faild ");
+                                Snackbar.make(findViewById(R.id.email_sign_in_button), R.string.error_401,
+                                        Snackbar.LENGTH_INDEFINITE).setAction(R.string.Ok, new OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+
+                                    }
+                                })
+                                        .show();
                             }
 
                             if(statusCode == 500){
+
+                                Snackbar.make(findViewById(R.id.email_sign_in_button), R.string.error_500,
+                                        Snackbar.LENGTH_INDEFINITE).setAction(R.string.Ok, new OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+
+                                    }
+                                })
+                                        .show();
 
                             }
                         }
@@ -126,19 +146,40 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     if (emailText.length()!= 0) {
 
-                        Toast.makeText(getApplicationContext(), "your password is null", Toast.LENGTH_LONG).show();
+                        Snackbar.make(findViewById(R.id.email_sign_in_button), R.string.PasswordIsEmpty,
+                                Snackbar.LENGTH_INDEFINITE).setAction(R.string.Ok, new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                            }
+                        })
+                                .show();
                         Log.i("2","your password is null");
 
 
                     } else {
                         if(passwordText.length()!= 0)
                         {
-                            Toast.makeText(getApplicationContext(), "your email is null", Toast.LENGTH_LONG).show();
+                            Snackbar.make(findViewById(R.id.email_sign_in_button), R.string.EmailIsEmpty,
+                                    Snackbar.LENGTH_INDEFINITE).setAction(R.string.Ok, new OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                }
+                            })
+                                    .show();
                             Log.i("2","your email is null");
                         }
 
                         else{
-                            Toast.makeText(getApplicationContext(), "your email and pass is null", Toast.LENGTH_LONG).show();
+                            Snackbar.make(findViewById(R.id.email_sign_in_button), R.string.PasswordAndEmailAreEmpty,
+                                    Snackbar.LENGTH_INDEFINITE).setAction(R.string.Ok, new OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                }
+                            })
+                                    .show();
                             Log.i("2","your email and pass is null");
                         }
                     }
