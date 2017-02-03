@@ -33,9 +33,12 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
 
     }
 
+    /**
+     * This method is called when the user clicks the log out item from the slide menu.
+     * It logs the user out , redirect him to the login screen, and clears the sharePreferences.
+     */
+
     private void logout() {
-
-
 
         HTTPResponse logoutHTTPResponse = new HTTPResponse() {
             @Override
@@ -57,6 +60,7 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
                     Toast.makeText(getApplicationContext(),
                             R.string.failed_logout_server_error,
                             Toast.LENGTH_LONG).show();
+
                 }
 
             }
@@ -64,7 +68,6 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
 
         // Logs out the logged in user.
         loggedInUser.logout(token, logoutHTTPResponse);
-
 
         // Getting a reference to the SharedPreferences.
         SharedPreferences sp = getSharedPreferences(getString(R.string.shared_preferences_name), Context.MODE_PRIVATE);
@@ -82,9 +85,13 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
         Intent logOutIntent = new Intent(getApplicationContext(), LoginActivity.class);
         startActivity(logOutIntent);
 
-
     }
 
+    /**
+     * This methods is called when any item of the slide menu is clicked.
+     * @param  {MenuItem} item [Selected item from the slide menu]
+     * @return {boolean}
+     */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 

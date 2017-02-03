@@ -32,7 +32,6 @@ public class User{
     private String phoneNumber;
     private JSONObject settings;
 
-    public User(){}
 
 
     public User(int id, Type type, String firstName, String lastName, Gender gender, String email, Date birthdate, String ieeeMembershipID, int committeeID, String committeeName, String phoneNumber, JSONObject settings) {
@@ -100,12 +99,12 @@ public class User{
 
     /**
      * This method is called when the user performs an editing operation on his profile.
-     * @param {String} token [user's token]
-     * @param {String} oldPassword [user's current password]
-     * @param {String} newPassword [user's new password]
-     * @param {String} IeeeMembershipID [user's IEEE membership id]
-     * @param {String} phoneNumber [user's phone number]
-     * @param {HTTPResponse} httpResponse [HTTPResponse interface instance]
+     * @param {String}       token            [user's token]
+     * @param {String}       oldPassword      [user's current password]
+     * @param {String}       newPassword      [user's new password]
+     * @param {String}       IeeeMembershipID [user's IEEE membership id]
+     * @param {String}       phoneNumber      [user's phone number]
+     * @param {HTTPResponse} httpResponse     [HTTPResponse interface instance]
      * @return {void}
      */
 
@@ -123,7 +122,6 @@ public class User{
             body.put("IEEE_membership_ID",IeeeMembershipID);
             body.put("phone_number",phoneNumber);
 
-
             Request request = new Request.Builder().put(RequestBody.create(MediaType.parse("application/json"),
                     new JSONObject(body).toString()))
                     .addHeader("Authorization", token)
@@ -136,6 +134,7 @@ public class User{
 
                     //No Internet Connection.
                     httpResponse.onFailure(-1, null);
+                    call.cancel();
                 }
 
                 @Override
@@ -174,6 +173,7 @@ public class User{
 
                     }
 
+                    response.close();
 
                 }
             });
@@ -195,13 +195,12 @@ public class User{
                     .url("http://ieeeguc.org/api/logout")
                     .build();
 
-
-
-
             ok.newCall(request).enqueue(new Callback() {
                 @Override
 
                 public void onFailure(Call call, IOException e) {
+
+                    httpResponse.onFailure(-1, null);
                     call.cancel();
                 }
                 @Override
@@ -223,6 +222,8 @@ public class User{
                     } catch (JSONException e) {
                         httpResponse.onFailure(500,null);
                     }
+
+                    response.close();
                 }
             });
         }
