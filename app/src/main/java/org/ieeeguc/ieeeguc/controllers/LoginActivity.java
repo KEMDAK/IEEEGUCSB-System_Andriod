@@ -40,13 +40,20 @@ import java.io.IOException;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
+import org.ieeeguc.ieeeguc.models.Gender;
+import org.ieeeguc.ieeeguc.models.Type;
+import org.ieeeguc.ieeeguc.models.User;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -96,8 +103,29 @@ public class LoginActivity extends AppCompatActivity {
 
                                     MainActivity.token = token ;
 
-
+                                    JSONObject USer = body.getJSONObject("user") ;
+                                    int id = USer.getInt("id") ;
+                                    String TYPE = USer.getString("type") ;
+                                    Type type = null;
+                                    String FN = USer.getString("first_name") ;
+                                    String LN =USer.getString("last_name") ;
+                                    String  gender = USer.getString("gender") ;
+                                    Gender GENDER = null  ;
+                                    String email = USer.getString("email") ;
+                                    String PN = USer.getString("phone_number") ;
+                                    String BDS = USer.getString("birthdate") ;
+                                    SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM DD, yyyy");
+                                    Date BD = dateFormatter.parse(BDS);
+                                    String IEEE_membership_ID = USer.getString("IEEE_membership_ID:") ;
+                                    JSONObject settings = USer.getJSONObject("settings") ;
+                                    JSONObject committee =USer.getJSONObject("committee") ;
+                                    String committeeName =committee.getString("committeeName") ;
+                                    int committeeID = committee.getInt("committeeID") ;
+                                    User user = new User(id,type,FN,LN,GENDER,email,BD ,IEEE_membership_ID,committeeID,committeeName,PN,settings) ;
+                                    MainActivity.loggedInUser = user ;
                                 } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
 

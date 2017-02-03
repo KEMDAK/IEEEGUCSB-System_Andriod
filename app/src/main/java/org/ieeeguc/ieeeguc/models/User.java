@@ -125,26 +125,25 @@ public class User {
         });
     }
 
-    public static void login(String email, String password, final HTTPResponse HTTPR) {
-        final JSONObject json = new JSONObject();
-        try {
-            json.put("email", email);
-            json.put("password", password);
-        } catch (JSONException e) {
+    public static void login(String email , String password ,final HTTPResponse HTTP_RESPONSE){
+        final JSONObject jsonB = new JSONObject();
+        try{
+            jsonB.put("email",email);
+            jsonB.put("password",password);
+        }catch(JSONException e){
             e.printStackTrace();
         }
         OkHttpClient client = new OkHttpClient();
-        RequestBody body = RequestBody.create(JSON, json.toString());
+        RequestBody body = RequestBody.create(JSON, jsonB.toString());
         Request request = new Request.Builder()
                 .url("http://ieeeguc.org/api/login")
-                .header("user_agent", "Android")
+                .header("user_agent","Android")
                 .post(body)
                 .build();
         client.newCall(request).enqueue(new Callback() {
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
             }
-
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 try {
@@ -152,15 +151,11 @@ public class User {
                     JSONObject json = new JSONObject(responseData);
                     int x = response.code();
                     String y = Integer.toString(x);
-                    if (y.charAt(0) == '2') {
-                        HTTPR.onSuccess(response.code(), json);
-                    } else {
-                        HTTPR.onFailure(response.code(), json);
+                    if(y.charAt(0)== '2'){
+                        HTTP_RESPONSE.onSuccess(response.code(),json);
+                    }
+                    else{
+                        HTTP_RESPONSE.onFailure(response.code(),json);
                     }
                 } catch (JSONException e) {
-                    HTTPR.onFailure(response.code(), json);
-                }
-            }
-        });
-    }
-}
+                    HTTP_RESPONSE.onFailure(response.code(),null);}}});}}
