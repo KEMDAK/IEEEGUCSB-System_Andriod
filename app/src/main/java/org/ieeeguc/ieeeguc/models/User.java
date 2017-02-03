@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -98,6 +99,30 @@ public class User {
 
     public String getCommitteeName() {
         return committeeName;
+    }
+
+    public static void ForgetPassword(String email, final HTTPResponse HTTPR) {
+        HashMap <String,String>p = new HashMap();
+        p.put("email",email) ;
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder()
+                .url("http://ieeeguc.org/api/login")
+                .post(RequestBody.create(JSON,( new JSONObject(p)).toString()))
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) {
+                try {
+                    HTTPR.onSuccess(200,new JSONObject(response.body().toString())) ;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public static void login(String email, String password, final HTTPResponse HTTPR) {

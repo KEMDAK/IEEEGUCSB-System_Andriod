@@ -11,6 +11,9 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
 
+    <!--Strings related to SharedPreferences-->
+    <string name="shared_preferences_name">preferences_ieee_guc</string>
+
     <!--Drawer items-->
     <string name="drawer_item_1">Home</string>
 </resources>

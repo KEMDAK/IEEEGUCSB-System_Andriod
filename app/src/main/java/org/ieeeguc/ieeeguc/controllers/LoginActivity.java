@@ -61,28 +61,23 @@ public class LoginActivity extends AppCompatActivity {
     AutoCompleteTextView email ;
     EditText password ;
     Button send ;
-    String Token ;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-
         email = (AutoCompleteTextView) findViewById(R.id.email) ;
         password = (EditText) findViewById(R.id.password) ;
         send = (Button) findViewById(R.id.email_sign_in_button) ;
-        final String emailText = email.getText().toString() ;
-        final String passwordText = password.getText().toString() ;
-         HashMap<String,String>body = new HashMap<>() ;
-        body.put("email",emailText) ;
-        body.put("password",passwordText) ;
-
-
         send.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                String emailText = email.getText().toString() ;
+                String passwordText = password.getText().toString() ;
+
                 if (emailText != null && passwordText != null) {
                     login(emailText, passwordText, new HTTPResponse() {
 
@@ -93,12 +88,13 @@ public class LoginActivity extends AppCompatActivity {
 
 
                                 try {
-                                    Token = body.getString("token");
-                                    SharedPreferences Sp = getApplicationContext().getSharedPreferences("Token", Context.MODE_PRIVATE);
+                                    String token = body.getString("token");
+                                    SharedPreferences Sp = getApplicationContext().getSharedPreferences(getString(R.string.shared_preferences_name), Context.MODE_PRIVATE);
                                     SharedPreferences.Editor E = Sp.edit();
-                                    E.putString("Token", Token);
+                                    E.putString("token", token);
                                     E.commit();
 
+                                    MainActivity.token = token ;
 
 
                                 } catch (JSONException e) {
