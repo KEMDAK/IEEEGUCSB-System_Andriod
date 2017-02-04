@@ -96,7 +96,7 @@ public class User{
         return committeeName;
     }
 
-public static void getUser(String token, int id, final HTTPResponse httpResponse){
+    public static void getUser(String token, int id, final HTTPResponse httpResponse){
         /*
         this method is called when the user to get information about some other user , the returned body will differ
         according to type of requested user
@@ -113,33 +113,30 @@ public static void getUser(String token, int id, final HTTPResponse httpResponse
                 .addHeader("Authorization",token)
                 .addHeader("user_agent","Android")
                 .build();
-                client.newCall(request).enqueue(new Callback() {
-                    public void onFailure(Call call, IOException e) {
-                        httpResponse.onFailure(-1,null);
-                        call.cancel();
-                    }
-                    public void onResponse(Call call, okhttp3.Response response) throws IOException {
-                        int code=response.code();
-                        String c=code+"";
-                        String body=response.body().toString();
-                    try {
-                         JSONObject rr =new JSONObject(body);
-                        if(c.charAt(0)=='2'){
-                            httpResponse.onSuccess(code,rr);
+        client.newCall(request).enqueue(new Callback() {
+            public void onFailure(Call call, IOException e) {
+                httpResponse.onFailure(-1,null);
+                call.cancel();
+            }
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                int code=response.code();
+                String c=code+"";
+                String body=response.body().toString();
+                try {
+                    JSONObject rr =new JSONObject(body);
+                    if(c.charAt(0)=='2'){
+                        httpResponse.onSuccess(code,rr);
 
-                        }else {
-                            httpResponse.onFailure(code,rr);
-                        }
-                    }catch (JSONException e){
-httpResponse.onFailure(code,null);
+                    }else {
+                        httpResponse.onFailure(code,rr);
                     }
-                    }
-                });
-
+                }catch (JSONException e){
+                    httpResponse.onFailure(code,null);
+                }
+            }
+        });
     }
-
-
-
+    
     /**
      * This method is called when the user performs an editing operation on his profile.
      * @param {String}       token            [user's token]
