@@ -21,8 +21,8 @@ import android.widget.Toast;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
-import org.ieeeguc.ieeeguc.models.Gender;
-import org.ieeeguc.ieeeguc.models.Type;
+import org.ieeeguc.ieeeguc.models.User.Gender;
+import org.ieeeguc.ieeeguc.models.User.Type;
 import org.ieeeguc.ieeeguc.models.User;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -81,32 +81,55 @@ public class LoginActivity extends AppCompatActivity {
 
                                     MainActivity.token = token ;
 
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    startActivity(intent);
+
 
                                     JSONObject USer = body.getJSONObject("user") ;
                                     int id = USer.getInt("id") ;
                                     String TYPE = USer.getString("type") ;
-                                    Type type = null;
+                                    Type type ;
+                                    switch (TYPE){
+                                        case "Admin" :  type = Type.ADMIN ; break ;
+                                        case "Upper Board" : type = Type.UPPER_BOARD ; break ;
+                                        case "High Board" : type = Type.HIGH_BOARD ;break ;
+                                        default:type = Type.MEMBER ; break ;
+                                    }
                                     String FN = USer.getString("first_name") ;
                                     String LN =USer.getString("last_name") ;
                                     String  gender = USer.getString("gender") ;
-                                    Gender GENDER = null  ;
+                                    Gender GENDER ;
+                                    switch (gender){
+                                        case "male" : GENDER = Gender.MALE ;
+                                            default: GENDER= Gender.FEMALE ;
+                                    }
                                     String email = USer.getString("email") ;
                                     String PN = USer.getString("phone_number") ;
                                     String BDS = USer.getString("birthdate") ;
-                                    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-dd-mm");
+                                    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-mm-dd");
                                     Date BD = dateFormatter.parse(BDS.substring(0,10));
-                                    String IEEE_membership_ID = USer.getString("IEEE_membership_ID:") ;
+                                    String IEEE_membership_ID = USer.getString("IEEE_membership_ID") ;
                                     JSONObject settings = USer.getJSONObject("settings") ;
-                                    JSONObject committee =USer.getJSONObject("committee") ;
+
+                                    if(USer.has("committee")  ){
+                                        JSONObject committee =USer.getJSONObject("committee") ;
                                     String committeeName =committee.getString("committeeName") ;
                                     int committeeID = committee.getInt("committeeID") ;
                                     User user = new User(id,type,FN,LN,GENDER,email,BD ,IEEE_membership_ID,committeeID,committeeName,PN,settings) ;
                                     MainActivity.loggedInUser = user ;
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    startActivity(intent);}
+                                    else{
+                                        String committeeName =null;
+                                        int committeeID = 0;
+                                        User user = new User(id,type,FN,LN,GENDER,email,BD ,IEEE_membership_ID,committeeID,committeeName,PN,settings) ;
+                                        MainActivity.loggedInUser = user ;
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        startActivity(intent);
+                                    }
+
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
+
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }

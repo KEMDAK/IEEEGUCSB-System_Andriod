@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -21,9 +22,16 @@ import static android.R.attr.y;
 import static android.view.View.X;
 import static android.view.View.Y;
 
-public class User {
+
+
+
+public class User{
+
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
+    public static enum Type { ADMIN, HIGH_BOARD, MEMBER, UPPER_BOARD }
+    public static enum Gender { MALE, FEMALE }
+
     private int id;
     private Type type;
     private String firstName;
@@ -158,4 +166,136 @@ public class User {
                         HTTP_RESPONSE.onFailure(response.code(),json);
                     }
                 } catch (JSONException e) {
-                    HTTP_RESPONSE.onFailure(response.code(),null);}}});}}
+                    HTTP_RESPONSE.onFailure(response.code(),null);}}});}
+    /**
+     * This method is called when the user performs an editing operation on his profile.
+     * @param {String}       token            [user's token]
+     * @param {String}       oldPassword      [user's current password]
+     * @param {String}       newPassword      [user's new password]
+     * @param {String}       IeeeMembershipID [user's IEEE membership id]
+     * @param {String}       phoneNumber      [user's phone number]
+     * @param {HTTPResponse} httpResponse     [HTTPResponse interface instance]
+     * @return {void}
+     */
+    public void editProfile(String token,
+                            String oldPassword,
+                            String newPassword,
+                            String IeeeMembershipID,
+                            String phoneNumber,
+                            final HTTPResponse httpResponse) {
+
+            OkHttpClient client = new OkHttpClient();
+            HashMap<String, String> body = new HashMap<>();
+            body.put("old_password",oldPassword);
+            body.put("new_password",newPassword);
+            body.put("IEEE_membership_ID",IeeeMembershipID);
+            body.put("phone_number",phoneNumber);
+
+            Request request = new Request.Builder().put(RequestBody.create(MediaType.parse("application/json"),
+                    new JSONObject(body).toString()))
+                    .addHeader("Authorization", token)
+                    .addHeader("user_agent", "Android")
+                    .url("http://ieeeguc.org/api/user").build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+
+                    //No Internet Connection.
+                    httpResponse.onFailure(-1, null);
+                    call.cancel();
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+
+                    //Getting the status code.
+                    int statusCode = response.code();
+                    String code = String.valueOf(statusCode);
+
+                    if (code.charAt(0) == '2') {
+
+                        // The received code is of the format 2xx, and the call was successful.
+
+                        try {
+
+                            JSONObject responseBody = new JSONObject(response.body().toString());
+                            httpResponse.onSuccess(statusCode, responseBody);
+
+                        } catch (JSONException e) {
+
+                            httpResponse.onFailure(500, null);
+                        }
+
+                    } else {
+
+                        // The received code is of the format 3xx or 4xx or 5xx,
+                        // and the call wasn't successful.
+
+                        try {
+                            JSONObject responseBody = new JSONObject(response.body().toString());
+                            httpResponse.onFailure(statusCode, responseBody);
+                        } catch (JSONException e) {
+
+                            httpResponse.onFailure(500, null);
+                        }
+
+                    }
+
+                    response.close();
+
+                }
+            });
+
+        }
+
+
+        /**
+         * This method is called when the user logs out.
+         * @param  {String}        token         [token of the user]
+         * @param  {HTTPResponse}  httpResponse  [httpResponse interface instance]
+         * @return {void}
+         */
+        public void logout(String token, final HTTPResponse httpResponse){
+
+            OkHttpClient ok = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .addHeader("Authorization",token)
+                    .addHeader("user_agent","Android")
+                    .url("http://ieeeguc.org/api/logout")
+                    .build();
+
+            ok.newCall(request).enqueue(new Callback() {
+                @Override
+
+                public void onFailure(Call call, IOException e) {
+
+                    httpResponse.onFailure(-1, null);
+                    call.cancel();
+                }
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+
+                    int code = response.code();
+                    String body = response.body().string();
+
+                    try {
+                        JSONObject j = new JSONObject(body);
+                        if(code/100 == 2)
+                        {
+                            httpResponse.onSuccess(code,j);
+                        }
+                        else
+                        {
+                            httpResponse.onFailure(code,j);
+                        }
+                    } catch (JSONException e) {
+                        httpResponse.onFailure(500,null);
+                    }
+
+                    response.close();
+                }
+            });
+        }
+
+    }
