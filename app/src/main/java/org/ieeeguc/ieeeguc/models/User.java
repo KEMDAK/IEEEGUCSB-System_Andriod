@@ -96,17 +96,18 @@ public class User{
         return committeeName;
     }
 
+    /*
+           this method is called when the user to get information about some other user , the returned body will differ
+           according to type of requested user
+           *@param {String} token [token of the user]
+           * @param {int} id [id of the user]
+           *@param {HTTPResponse}
+            httpResponse
+             [httpResponse interface instance]
+            *@return {void}
+           */
     public static void getUser(String token, int id, final HTTPResponse httpResponse){
-        /*
-        this method is called when the user to get information about some other user , the returned body will differ
-        according to type of requested user
-        *@param {String} token [token of the user]
-        * @param {int} id [id of the user]
-        *@param {HTTPResponse}
-         httpResponse
-          [httpResponse interface instance]
-         *@return {void}
-        */
+
         OkHttpClient client= new OkHttpClient();
         Request request=new Request.Builder()
                 .url("http://ieeeguc.org/api/User/"+id)
