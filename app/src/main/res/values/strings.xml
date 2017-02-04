@@ -13,19 +13,11 @@
     <string name="error_connection">Operation Failed, please check your internet Connection!</string>
     <string name="error_server_down">Sorry something went wrong with the server,please try again later!</string>
 
-    <!--Strings related to SharedPreferences-->
-    <string name="shared_preferences_name">preferences_ieee_guc</string>
-    <string name ="error_401">your email or password is wrong </string>
-    <string name ="error_500">IEEE is down </string>
-    <string name ="EmailIsEmpty">please enter your email </string>
-    <string name ="PasswordIsEmpty">please enter your password </string>
-    <string name ="PasswordAndEmailAreEmpty">please enter your password and email </string>
-    <string name ="Ok">ok </string>
-
-
     <!--Drawer items-->
     <string name="drawer_item_1">Home</string>
     <string name="drawer_item_2">Log out</string>
 
 
+    <!--Strings related to SharedPreferences-->
+    <string name="shared_preferences_name">preferences_ieee_guc</string>
 </resources>
