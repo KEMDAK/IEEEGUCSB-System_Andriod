@@ -15,7 +15,6 @@ import org.ieeeguc.ieeeguc.R;
 import org.ieeeguc.ieeeguc.models.User;
 import org.json.JSONObject;
 
-
 public class MainActivity extends Activity implements NavigationView.OnNavigationItemSelectedListener {
 
     public static User loggedInUser;
@@ -37,7 +36,6 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
      * This method is called when the user clicks the log out item from the slide menu.
      * It logs the user out , redirect him to the login screen, and clears the sharePreferences.
      */
-
     private void logout() {
 
         HTTPResponse logoutHTTPResponse = new HTTPResponse() {
@@ -52,13 +50,13 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
                 if (statusCode == -1) {
 
                     Toast.makeText(getApplicationContext(),
-                            R.string.failed_logout_internet_problem
+                            R.string.error_connection
                             , Toast.LENGTH_LONG).show();
 
                 } else if (statusCode == 500) {
 
                     Toast.makeText(getApplicationContext(),
-                            R.string.failed_logout_server_error,
+                            R.string.error_server_down,
                             Toast.LENGTH_LONG).show();
 
                 }

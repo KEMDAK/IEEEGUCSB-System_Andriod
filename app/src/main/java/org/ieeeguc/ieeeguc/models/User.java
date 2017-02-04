@@ -1,6 +1,5 @@
 package org.ieeeguc.ieeeguc.models;
 
-
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,9 +14,10 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-
-
 public class User{
+
+    public static enum Type { ADMIN, HIGH_BOARD, MEMBER, UPPER_BOARD }
+    public static enum Gender { MALE, FEMALE }
 
     private int id;
     private Type type;
@@ -31,8 +31,6 @@ public class User{
     private String committeeName;
     private String phoneNumber;
     private JSONObject settings;
-
-
 
     public User(int id, Type type, String firstName, String lastName, Gender gender, String email, Date birthdate, String ieeeMembershipID, int committeeID, String committeeName, String phoneNumber, JSONObject settings) {
         this.type = type;
@@ -107,7 +105,6 @@ public class User{
      * @param {HTTPResponse} httpResponse     [HTTPResponse interface instance]
      * @return {void}
      */
-
     public void editProfile(String token,
                             String oldPassword,
                             String newPassword,
@@ -188,6 +185,7 @@ public class User{
          * @return {void}
          */
         public void logout(String token, final HTTPResponse httpResponse){
+
             OkHttpClient ok = new OkHttpClient();
             Request request = new Request.Builder()
                     .addHeader("Authorization",token)
