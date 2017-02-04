@@ -1,6 +1,5 @@
 package org.ieeeguc.ieeeguc;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -12,7 +11,7 @@ public interface HTTPResponse {
      * @param statusCode The status code of the HTTP response
      * @param body The body of the HTTP response
      */
-    public void onSuccess(int statusCode, JSONObject body) ;
+    public void onSuccess(int statusCode, JSONObject body);
 
     /**
      * This method is called when the HTTP response is successfully received and the status code is of the following [3xx, 4xx, 5xx]
