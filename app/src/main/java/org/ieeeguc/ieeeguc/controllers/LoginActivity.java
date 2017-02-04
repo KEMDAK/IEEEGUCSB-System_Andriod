@@ -81,6 +81,9 @@ public class LoginActivity extends AppCompatActivity {
 
                                     MainActivity.token = token ;
 
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    startActivity(intent);
+
                                     JSONObject USer = body.getJSONObject("user") ;
                                     int id = USer.getInt("id") ;
                                     String TYPE = USer.getString("type") ;
@@ -92,8 +95,8 @@ public class LoginActivity extends AppCompatActivity {
                                     String email = USer.getString("email") ;
                                     String PN = USer.getString("phone_number") ;
                                     String BDS = USer.getString("birthdate") ;
-                                    SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM DD, yyyy");
-                                    Date BD = dateFormatter.parse(BDS);
+                                    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-dd-mm");
+                                    Date BD = dateFormatter.parse(BDS.substring(0,10));
                                     String IEEE_membership_ID = USer.getString("IEEE_membership_ID:") ;
                                     JSONObject settings = USer.getJSONObject("settings") ;
                                     JSONObject committee =USer.getJSONObject("committee") ;
@@ -101,6 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                                     int committeeID = committee.getInt("committeeID") ;
                                     User user = new User(id,type,FN,LN,GENDER,email,BD ,IEEE_membership_ID,committeeID,committeeName,PN,settings) ;
                                     MainActivity.loggedInUser = user ;
+
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 } catch (ParseException e) {
