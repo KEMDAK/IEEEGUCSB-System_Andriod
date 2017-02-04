@@ -136,7 +136,7 @@ public class User{
             }
         });
     }
-    
+
     /**
      * This method is called when the user performs an editing operation on his profile.
      * @param {String}       token            [user's token]
