@@ -15,6 +15,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
 public class User{
 
     public static enum Type { ADMIN, HIGH_BOARD, MEMBER, UPPER_BOARD }
@@ -96,16 +97,13 @@ public class User{
         return committeeName;
     }
 
-    /*
-           this method is called when the user to get information about some other user , the returned body will differ
-           according to type of requested user
-           *@param {String} token [token of the user]
-           * @param {int} id [id of the user]
-           *@param {HTTPResponse}
-            httpResponse
-             [httpResponse interface instance]
-            *@return {void}
-           */
+    /**
+     * this method is called when the user to get information about some other user , the returned body will differ according to type of requested user
+     * @param {String} token [token of the user]
+     * @param {int} id [id of the user]
+     * @param {HTTPResponse} httpResponse [httpResponse interface instance]
+     * @return {void}
+     */
     public static void getUser(String token, int id, final HTTPResponse httpResponse){
 
         OkHttpClient client= new OkHttpClient();
@@ -134,6 +132,8 @@ public class User{
                 }catch (JSONException e){
                     httpResponse.onFailure(code,null);
                 }
+
+                response.close();
             }
         });
     }
