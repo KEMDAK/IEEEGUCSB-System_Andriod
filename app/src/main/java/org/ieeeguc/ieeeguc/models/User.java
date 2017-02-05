@@ -3,9 +3,11 @@ package org.ieeeguc.ieeeguc.models;
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -93,6 +95,47 @@ public class User{
 
     public String getCommitteeName() {
         return committeeName;
+    }
+
+    /**
+     * this method is called when the user to get information about some other user , the returned body will differ according to type of requested user
+     * @param {String} token [token of the user]
+     * @param {int} id [id of the user]
+     * @param {HTTPResponse} httpResponse [httpResponse interface instance]
+     * @return {void}
+     */
+    public static void getUser(String token, int id, final HTTPResponse httpResponse){
+
+        OkHttpClient client= new OkHttpClient();
+        Request request=new Request.Builder()
+                .url("http://ieeeguc.org/api/User/"+id)
+                .addHeader("Authorization",token)
+                .addHeader("user_agent","Android")
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            public void onFailure(Call call, IOException e) {
+                httpResponse.onFailure(-1,null);
+                call.cancel();
+            }
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                int code=response.code();
+                String c=code+"";
+                String body=response.body().toString();
+                try {
+                    JSONObject rr =new JSONObject(body);
+                    if(c.charAt(0)=='2'){
+                        httpResponse.onSuccess(code,rr);
+
+                    }else {
+                        httpResponse.onFailure(code,rr);
+                    }
+                }catch (JSONException e){
+                    httpResponse.onFailure(code,null);
+                }
+
+                response.close();
+            }
+        });
     }
 
     /**
