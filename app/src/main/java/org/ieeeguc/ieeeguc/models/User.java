@@ -135,7 +135,7 @@ public class User{
 
     }
 
-    /*
+    /**
     * This Method is used by the user to login to the Server
     * @param {string} email [email of the user]
     * @param {string} password [password of the user]
