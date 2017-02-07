@@ -124,40 +124,58 @@ public class User{
         });
     }
 
+    /*
+    * This Method is used by the user to login to the Server
+    * @param {string} email [email of the user]
+    * @param {string} password [password of the user]
+    * @param {HttpResponse} HTTP_RESPONSE [http interface instance which is the response coming from the server
+     after logging in containing info of the user in the Database]
+    * @return {void}
+     */
+
     public static void login(String email , String password ,final HTTPResponse HTTP_RESPONSE){
-        final JSONObject jsonB = new JSONObject();
-        try{
-            jsonB.put("email",email);
-            jsonB.put("password",password);
-        }catch(JSONException e){
-            e.printStackTrace();
-        }
+
         OkHttpClient client = new OkHttpClient();
-        RequestBody body = RequestBody.create(contentType, jsonB.toString());
-        Request request = new Request.Builder()
-                .url("http://ieeeguc.org/api/login")
-                .header("user_agent","Android")
-                .post(body)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-            }
-            @Override
-            public void onResponse(Call call, final Response response) throws IOException {
-                try {
-                    String responseData = response.body().string();
-                    JSONObject json = new JSONObject(responseData);
-                    int x = response.code();
-                    String y = Integer.toString(x);
-                    if(y.charAt(0)== '2'){
-                        HTTP_RESPONSE.onSuccess(response.code(),json);
+        JSONObject jsonBody = new JSONObject();
+        try{
+            jsonBody.put("email",email);
+            jsonBody.put("password",password);
+            RequestBody body = RequestBody.create(contentType, jsonBody.toString());
+            Request request = new Request.Builder()
+                    .url("http://ieeeguc.org/api/login")
+                    .header("user_agent","Android")
+                    .post(body)
+                    .build();
+            client.newCall(request).enqueue(new Callback() {
+                public void onFailure(Call call, IOException e) {
+                    HTTP_RESPONSE.onFailure(-1,null);
+                    call.cancel();
+                }
+                @Override
+                public void onResponse(Call call, final Response response) throws IOException {
+                    try {
+                        String responseData = response.body().toString();
+                        JSONObject json = new JSONObject(responseData);
+                        int x = response.code();
+                        String y = Integer.toString(x);
+                        if(y.charAt(0)== '2'){
+                            HTTP_RESPONSE.onSuccess(x,json);
+                        }
+                        else{
+                            HTTP_RESPONSE.onFailure(x,json);
+                        }
+                    } catch (JSONException e) {
+                        HTTP_RESPONSE.onFailure(500,null);
                     }
-                    else{
-                        HTTP_RESPONSE.onFailure(response.code(),json);
-                    }
-                } catch (JSONException e) {
-                    HTTP_RESPONSE.onFailure(response.code(),null);}}});}
+                    response.close();
+                }
+            });
+        }catch(JSONException e){
+            HTTP_RESPONSE.onFailure(-1,null);
+        }
+
+    }
+
     /**
      * this method is called when the user to get information about some other user , the returned body will differ according to type of requested user
      * @param {String} token [token of the user]
