@@ -7,13 +7,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
@@ -22,9 +19,11 @@ import org.ieeeguc.ieeeguc.models.User.Gender;
 import org.ieeeguc.ieeeguc.models.User.Type;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import static org.ieeeguc.ieeeguc.models.User.login;
 
 /**
@@ -49,7 +48,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 attemptLogin() ;
-            }});
+            }
+        });
     }
 
     public void attemptLogin() {

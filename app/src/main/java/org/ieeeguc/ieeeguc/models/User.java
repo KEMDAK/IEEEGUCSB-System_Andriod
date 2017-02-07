@@ -1,7 +1,5 @@
 package org.ieeeguc.ieeeguc.models;
 
-import android.util.Log;
-
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -102,50 +100,47 @@ public class User{
         return committeeName;
     }
 
-    /* this method is called when the user forgrt the password
-    and send an email to the user email adress
-       @params email (is the user email adress)
-       @params Httpr (is the interface instance)
+    /**
+     * this method is called when the user forget the password and send an email to the user email address
+     * @param {string} email [email of the user]
+     * @param {HTTPResponse} httpResponse [HTTPResponse interface instance]
+     * @return {void}
      */
-    public static void ForgetPassword(String email, final HTTPResponse HttpResponse) {
+    public static void forgetPassword(String email, final HTTPResponse httpResponse) {
         HashMap <String,String>body = new HashMap();
-        body.put("email",email) ;
+        body.put("email", email) ;
         OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
-                .url("http://ieeeguc.org/api/login")
-                .post(RequestBody.create(contentType,( new JSONObject(body)).toString()))
+                .url("http://ieeeguc.org/api/forgotPassword")
+                .post(RequestBody.create(contentType,(new JSONObject(body)).toString()))
                 .build();
         client.newCall(request).enqueue(new Callback() {
             public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-                HttpResponse.onFailure(0, null);
+                httpResponse.onFailure(-1, null);
                 call.cancel();
             }
 
             @Override
-            public void onResponse(Call call, final Response response) {
+            public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    HttpResponse.onSuccess(200,new JSONObject(response.body().toString())) ;
+                    String body = response.body().string();
+                    httpResponse.onSuccess(200,new JSONObject(body)) ;
                 } catch (JSONException e) {
-                    e.printStackTrace();
-                    HttpResponse.onFailure(500, null); ;
+                    httpResponse.onFailure(500, null); ;
                 }
 
                 response.close();
             }
         });
-
     }
 
     /**
-    * This Method is used by the user to login to the Server
-    * @param {string} email [email of the user]
-    * @param {string} password [password of the user]
-    * @param {HttpResponse} HTTP_RESPONSE [http interface instance which is the response coming from the server
-     after logging in containing info of the user in the Database]
-    * @return {void}
+     * This Method is used by the user to login to the Server
+     * @param {string} email [email of the user]
+     * @param {string} password [password of the user]
+     * @param {HttpResponse} HTTP_RESPONSE [http interface instance which is the response coming from the server after logging in containing info of the user in the Database]
+     * @return {void}
      */
-
     public static void login(String email , String password ,final HTTPResponse HTTP_RESPONSE){
 
         OkHttpClient client = new OkHttpClient();
@@ -212,7 +207,7 @@ public class User{
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 int code=response.code();
                 String c=code+"";
-                String body=response.body().toString();
+                String body=response.body().string();
                 try {
                     JSONObject rr =new JSONObject(body);
                     if(c.charAt(0)=='2'){
@@ -240,12 +235,7 @@ public class User{
      * @param {HTTPResponse} httpResponse     [HTTPResponse interface instance]
      * @return {void}
      */
-    public void editProfile(String token,
-                            String oldPassword,
-                            String newPassword,
-                            String IeeeMembershipID,
-                            String phoneNumber,
-                            final HTTPResponse httpResponse) {
+    public void editProfile(String token, String oldPassword, String newPassword, String IeeeMembershipID, String phoneNumber, final HTTPResponse httpResponse) {
 
         OkHttpClient client = new OkHttpClient();
         HashMap<String, String> body = new HashMap<>();
@@ -282,7 +272,7 @@ public class User{
 
                     try {
 
-                        JSONObject responseBody = new JSONObject(response.body().toString());
+                        JSONObject responseBody = new JSONObject(response.body().string());
                         httpResponse.onSuccess(statusCode, responseBody);
 
                     } catch (JSONException e) {
@@ -296,7 +286,7 @@ public class User{
                     // and the call wasn't successful.
 
                     try {
-                        JSONObject responseBody = new JSONObject(response.body().toString());
+                        JSONObject responseBody = new JSONObject(response.body().string());
                         httpResponse.onFailure(statusCode, responseBody);
                     } catch (JSONException e) {
 
@@ -311,7 +301,6 @@ public class User{
         });
 
     }
-
 
     /**
      * This method is called when the user logs out.
@@ -360,5 +349,4 @@ public class User{
             }
         });
     }
-
 }
