@@ -1,5 +1,7 @@
 package org.ieeeguc.ieeeguc.models;
 
+import android.util.Log;
+
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -163,9 +165,9 @@ public class User{
                     call.cancel();
                 }
                 @Override
-                public void onResponse(Call call, final Response response) throws IOException {
+                public void onResponse(Call call, Response response) throws IOException {
                     try {
-                        String responseData = response.body().toString();
+                        String responseData = response.body().string();
                         JSONObject json = new JSONObject(responseData);
                         int x = response.code();
                         String y = Integer.toString(x);
