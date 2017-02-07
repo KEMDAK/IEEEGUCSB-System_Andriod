@@ -110,23 +110,25 @@ public class User{
         body.put("email",email) ;
         OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
-                .url("http://ieeeguc.org/api/login")
+                .url("http://ieeeguc.org/api/forgotPassword ")
                 .post(RequestBody.create(contentType,( new JSONObject(body)).toString()))
                 .build();
         client.newCall(request).enqueue(new Callback() {
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                HttpResponse.onFailure(0, null);
+                HttpResponse.onFailure(-1, null);
                 call.cancel();
             }
 
             @Override
             public void onResponse(Call call, final Response response) {
                 try {
-                    HttpResponse.onSuccess(200,new JSONObject(response.body().toString())) ;
+                    HttpResponse.onSuccess(200,new JSONObject(response.body().string())) ;
                 } catch (JSONException e) {
                     e.printStackTrace();
                     HttpResponse.onFailure(500, null); ;
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
 
                 response.close();
@@ -165,7 +167,7 @@ public class User{
                 @Override
                 public void onResponse(Call call, final Response response) throws IOException {
                     try {
-                        String responseData = response.body().toString();
+                        String responseData = response.body().string();
                         JSONObject json = new JSONObject(responseData);
                         int x = response.code();
                         String y = Integer.toString(x);

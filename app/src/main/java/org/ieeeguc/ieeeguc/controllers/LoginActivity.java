@@ -23,6 +23,8 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static org.ieeeguc.ieeeguc.models.User.ForgetPassword;
 import static org.ieeeguc.ieeeguc.models.User.login;
 
 /**
@@ -43,18 +45,16 @@ public class LoginActivity extends AppCompatActivity {
         email = (EditText) findViewById(R.id.email) ;
         password = (EditText) findViewById(R.id.password) ;
         send = (Button) findViewById(R.id.email_sign_in_button) ;
-        final String[] message = new String[1];
         send.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin() ;
-        }});
+            }});
     }
 
     public void attemptLogin() {
         String emailText = email.getText().toString() ;
         String passwordText = password.getText().toString() ;
-
 
         if (emailText.length()!= 0 && passwordText.length()!= 0 ) {
             login(emailText, passwordText, new HTTPResponse() {
@@ -107,12 +107,12 @@ public class LoginActivity extends AppCompatActivity {
                             int committeeID ;
                             if(JsonUser.has("committee")  ){
                                 JSONObject committee =JsonUser.getJSONObject("committee") ;
-                                 committeeName =committee.getString("committeeName") ;
-                                 committeeID = committee.getInt("committeeID") ;
-                                }
+                                committeeName =committee.getString("committeeName") ;
+                                committeeID = committee.getInt("committeeID") ;
+                            }
                             else{
-                                 committeeName =null;
-                                 committeeID = 0;
+                                committeeName =null;
+                                committeeID = 0;
 
                             }
 
@@ -139,7 +139,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     if(statusCode == 401)
                     {
-                        Snackbar.make(findViewById(R.id.email_sign_in_button), "your email or password is wrong",
+                        Snackbar.make(findViewById(R.id.email_sign_in_button), R.string.error_incorrect_credentials,
                                 Snackbar.LENGTH_INDEFINITE).setAction("Ok", new OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -151,7 +151,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     if(statusCode == 500){
 
-                        Snackbar.make(findViewById(R.id.email_sign_in_button), "IEEE is down",
+                        Snackbar.make(findViewById(R.id.email_sign_in_button),R.string.error_connection,
                                 Snackbar.LENGTH_INDEFINITE).setAction("Ok", new OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -166,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             if (emailText.length()!= 0) {
 
-                Snackbar.make(findViewById(R.id.email_sign_in_button), "please enter your password",
+                Snackbar.make(findViewById(R.id.email_sign_in_button),R.string.error_invalid_email,
                         Snackbar.LENGTH_INDEFINITE).setAction("Ok", new OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -179,7 +179,7 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 if(passwordText.length()!= 0)
                 {
-                    Snackbar.make(findViewById(R.id.email_sign_in_button), "please enter your email",
+                    Snackbar.make(findViewById(R.id.email_sign_in_button),R.string.error_empty_password,
                             Snackbar.LENGTH_INDEFINITE).setAction("Ok", new OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -190,7 +190,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 else{
-                    Snackbar.make(findViewById(R.id.email_sign_in_button), "please enter your password and email",
+                    Snackbar.make(findViewById(R.id.email_sign_in_button),R.string.error_field_required,
                             Snackbar.LENGTH_INDEFINITE).setAction("Ok", new OnClickListener() {
                         @Override
                         public void onClick(View view) {
