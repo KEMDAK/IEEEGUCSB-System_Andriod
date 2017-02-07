@@ -100,28 +100,39 @@ public class User{
         return committeeName;
     }
 
-    public static void ForgetPassword(String email, final HTTPResponse HTTPR) {
-        HashMap <String,String>p = new HashMap();
-        p.put("email",email) ;
+    /* this method is called when the user forgrt the password
+    and send an email to the user email adress
+       @params email (is the user email adress)
+       @params Httpr (is the interface instance)
+     */
+    public static void ForgetPassword(String email, final HTTPResponse HttpResponse) {
+        HashMap <String,String>body = new HashMap();
+        body.put("email",email) ;
         OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .url("http://ieeeguc.org/api/login")
-                .post(RequestBody.create(contentType,( new JSONObject(p)).toString()))
+                .post(RequestBody.create(contentType,( new JSONObject(body)).toString()))
                 .build();
         client.newCall(request).enqueue(new Callback() {
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
+                HttpResponse.onFailure(0, null);
+                call.cancel();
             }
 
             @Override
             public void onResponse(Call call, final Response response) {
                 try {
-                    HTTPR.onSuccess(200,new JSONObject(response.body().toString())) ;
+                    HttpResponse.onSuccess(200,new JSONObject(response.body().toString())) ;
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    HttpResponse.onFailure(500, null); ;
                 }
+
+                response.close();
             }
         });
+
     }
 
     /*
