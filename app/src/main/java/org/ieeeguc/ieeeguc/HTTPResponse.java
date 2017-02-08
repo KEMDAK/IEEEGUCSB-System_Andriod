@@ -18,5 +18,5 @@ public interface HTTPResponse {
      * @param statusCode The status code of the HTTP response
      * @param body The body of the HTTP response
      */
-    public  void onFailure(int statusCode, JSONObject body);
+    public void onFailure(int statusCode, JSONObject body);
 }

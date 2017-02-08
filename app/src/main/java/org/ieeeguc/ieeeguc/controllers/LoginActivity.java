@@ -1,6 +1,5 @@
 package org.ieeeguc.ieeeguc.controllers;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,13 +16,10 @@ import org.ieeeguc.ieeeguc.R;
 import org.ieeeguc.ieeeguc.models.User;
 import org.ieeeguc.ieeeguc.models.User.Gender;
 import org.ieeeguc.ieeeguc.models.User.Type;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 
 import static org.ieeeguc.ieeeguc.models.User.login;
 
@@ -32,9 +28,9 @@ import static org.ieeeguc.ieeeguc.models.User.login;
  */
 public class LoginActivity extends AppCompatActivity {
 
-    EditText email ;
-    EditText password ;
-    Button send ;
+    private EditText email ;
+    private EditText password ;
+    private Button send ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * this method is called when the user click the buttom and the app attemp log in
-     * the method doesn't take params as it takes
-     * (String) emailText [the user email]
-     * (String) passWord  [the user password]
-     * from the global varibale
-     *
+     * this method is called when the user click the button and the app attempt to log in
      */
     public void attemptLogin() {
         String emailText = email.getText().toString() ;
@@ -69,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
             login(emailText, passwordText, new HTTPResponse() {
 
                 @Override
-                public void onSuccess(int statusCode, JSONObject body)  {
+                public void onSuccess(int statusCode, JSONObject body) {
 
                     try {
                         String token = body.getString("token");
@@ -78,57 +69,70 @@ public class LoginActivity extends AppCompatActivity {
                         E.putString("token", token);
                         E.commit();
 
-                        MainActivity.token = token ;
+                        MainActivity.token = token;
 
-                        JSONObject jsonUser = body.getJSONObject("user") ;
-                        int id = jsonUser.getInt("id") ;
-                        String stringType = jsonUser.getString("type") ;
-                        Type type ;
-                        switch (stringType){
-                            case "Admin" :  type = Type.ADMIN ; break ;
-                            case "Upper Board" : type = Type.UPPER_BOARD ; break ;
-                            case "High Board" : type = Type.HIGH_BOARD ;break ;
-                            default:type = Type.MEMBER ; break ;
+                        JSONObject jsonUser = body.getJSONObject("user");
+                        int id = jsonUser.getInt("id");
+                        String stringType = jsonUser.getString("type");
+                        Type type;
+                        switch (stringType) {
+                            case "Admin":
+                                type = Type.ADMIN;
+                                break;
+                            case "Upper Board":
+                                type = Type.UPPER_BOARD;
+                                break;
+                            case "High Board":
+                                type = Type.HIGH_BOARD;
+                                break;
+                            default:
+                                type = Type.MEMBER;
+                                break;
                         }
-                        String FN = jsonUser.getString("first_name") ;
-                        String LN =jsonUser.getString("last_name") ;
-                        String  stringGender = jsonUser.getString("gender") ;
-                        Gender gender ;
-                        switch (stringGender){
-                            case "male" : gender = Gender.MALE ; break ;
-                            default: gender= Gender.FEMALE ;
+                        String FN = jsonUser.getString("first_name");
+                        String LN = jsonUser.getString("last_name");
+                        String stringGender = jsonUser.getString("gender");
+                        Gender gender;
+                        switch (stringGender) {
+                            case "male":
+                                gender = Gender.MALE;
+                                break;
+                            default:
+                                gender = Gender.FEMALE;
                         }
-                        String email = jsonUser.getString("email") ;
-                        String PN = jsonUser.getString("phone_number") ;
-                        String BDS = jsonUser.getString("birthdate") ;
+                        String email = jsonUser.getString("email");
+                        String PN = jsonUser.getString("phone_number");
+                        String BDS = jsonUser.getString("birthdate");
                         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-mm-dd");
-                        Date BD = dateFormatter.parse(BDS.substring(0,10));
-                        String IEEE_membership_ID = jsonUser.getString("IEEE_membership_ID") ;
-                        JSONObject settings = jsonUser.getJSONObject("settings") ;
-                        String committeeName ;
-                        int committeeID ;
-                        if(jsonUser.has("committee")){
-                            JSONObject committee = jsonUser.getJSONObject("committee") ;
-                            committeeName = committee.getString("committeeName") ;
-                            committeeID = committee.getInt("committeeID") ;
-                        }
-                        else{
+                        Date BD = dateFormatter.parse(BDS.substring(0, 10));
+                        String IEEE_membership_ID = jsonUser.getString("IEEE_membership_ID");
+                        JSONObject settings = jsonUser.getJSONObject("settings");
+                        String committeeName;
+                        int committeeID;
+                        if (jsonUser.has("committee")) {
+                            JSONObject committee = jsonUser.getJSONObject("committee");
+                            committeeName = committee.getString("committeeName");
+                            committeeID = committee.getInt("committeeID");
+                        } else {
                             committeeName = null;
                             committeeID = 0;
 
                         }
 
-                        User user = new User(id, type, FN, LN, gender, email, BD, IEEE_membership_ID, committeeID, committeeName, PN, settings) ;
-                        MainActivity.loggedInUser = user ;
+                        User user = new User(id, type, FN, LN, gender, email, BD, IEEE_membership_ID, committeeID, committeeName, PN, settings);
+                        MainActivity.loggedInUser = user;
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        Snackbar.make(findViewById(R.id.email_sign_in_button), getString(R.string.error_server_down),
+                                Snackbar.LENGTH_INDEFINITE).setAction("Ok", new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
 
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }}
-
+                            }
+                        }).show();
+                    }
+                }
 
                 @Override
                 public void onFailure(int statusCode, JSONObject body) {

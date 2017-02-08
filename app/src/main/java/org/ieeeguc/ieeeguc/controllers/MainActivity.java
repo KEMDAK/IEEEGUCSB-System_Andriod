@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
@@ -16,21 +18,24 @@ import org.ieeeguc.ieeeguc.R;
 import org.ieeeguc.ieeeguc.models.User;
 import org.json.JSONObject;
 
+/**
+ * The main screen that offers the different sections of the application.
+ */
 public class MainActivity extends Activity implements NavigationView.OnNavigationItemSelectedListener {
 
     public static User loggedInUser;
     public static String token;
-    public NavigationView navigationView;
+
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Sets the class to be a listener.
+        // Sets the class to be a listener to the navigation menu.
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
-
     }
 
     /**
@@ -49,19 +54,22 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
             public void onFailure(int statusCode, JSONObject body) {
 
                 if (statusCode == -1) {
+                    Snackbar.make(findViewById(R.id.email_sign_in_button), getString(R.string.error_connection),
+                            Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
 
-                    Toast.makeText(getApplicationContext(),
-                            R.string.error_connection
-                            , Toast.LENGTH_LONG).show();
-
+                        }
+                    }).show();
                 } else if (statusCode == 500) {
+                    Snackbar.make(findViewById(R.id.email_sign_in_button), getString(R.string.error_server_down),
+                            Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
 
-                    Toast.makeText(getApplicationContext(),
-                            R.string.error_server_down,
-                            Toast.LENGTH_LONG).show();
-
+                        }
+                    }).show();
                 }
-
             }
         };
 
