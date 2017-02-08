@@ -11,6 +11,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
+
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
 import org.ieeeguc.ieeeguc.models.User;
@@ -67,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences Sp = getApplicationContext().getSharedPreferences(getString(R.string.shared_preferences_name), Context.MODE_PRIVATE);
                         SharedPreferences.Editor E = Sp.edit();
                         E.putString("token", token);
-                        E.commit();
+
 
                         MainActivity.token = token;
 
@@ -116,11 +118,12 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             committeeName = null;
                             committeeID = 0;
-
                         }
 
                         User user = new User(id, type, FN, LN, gender, email, BD, IEEE_membership_ID, committeeID, committeeName, PN, settings);
                         MainActivity.loggedInUser = user;
+                        E.putString("user", new Gson().toJson(user));
+                        E.commit();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                     } catch (Exception e) {

@@ -6,12 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
