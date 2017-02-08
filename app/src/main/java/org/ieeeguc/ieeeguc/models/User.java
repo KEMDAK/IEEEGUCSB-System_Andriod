@@ -16,7 +16,12 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+/**
+ * Class to be used as a container for the user.
+ */
 public class User{
+
+    public static final MediaType CONTENT_TYPE = MediaType.parse("application/json; charset=utf-8");
 
     public static enum Type { ADMIN, HIGH_BOARD, MEMBER, UPPER_BOARD }
     public static enum Gender { MALE, FEMALE }
@@ -98,13 +103,97 @@ public class User{
     }
 
     /**
+     * this method is called when the user forget the password and send an email to the user email address
+     * @param {string} email [email of the user]
+     * @param {HTTPResponse} HTTP_RESPONSE [HTTPResponse interface instance]
+     * @return {void}
+     */
+    public static void forgetPassword(String email, final HTTPResponse HTTP_RESPONSE) {
+        HashMap <String,String>body = new HashMap();
+        body.put("email", email) ;
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder()
+                .url("http://ieeeguc.org/api/forgotPassword")
+                .post(RequestBody.create(CONTENT_TYPE,(new JSONObject(body)).toString()))
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            public void onFailure(Call call, IOException e) {
+                HTTP_RESPONSE.onFailure(-1, null);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    String body = response.body().string();
+                    HTTP_RESPONSE.onSuccess(200,new JSONObject(body)) ;
+                } catch (JSONException e) {
+                    HTTP_RESPONSE.onFailure(500, null); ;
+                }
+
+                response.close();
+            }
+        });
+    }
+
+    /**
+     * This Method is used by the user to login to the Server
+     * @param {string} email [email of the user]
+     * @param {string} password [password of the user]
+     * @param {HttpResponse} HTTP_RESPONSE [http interface instance which is the response coming from the server after logging in containing info of the user in the Database]
+     * @return {void}
+     */
+    public static void login(String email , String password ,final HTTPResponse HTTP_RESPONSE){
+
+        OkHttpClient client = new OkHttpClient();
+        JSONObject jsonBody = new JSONObject();
+        try{
+            jsonBody.put("email",email);
+            jsonBody.put("password",password);
+            RequestBody body = RequestBody.create(CONTENT_TYPE, jsonBody.toString());
+            Request request = new Request.Builder()
+                    .url("http://ieeeguc.org/api/login")
+                    .header("user_agent","Android")
+                    .post(body)
+                    .build();
+            client.newCall(request).enqueue(new Callback() {
+                public void onFailure(Call call, IOException e) {
+                    HTTP_RESPONSE.onFailure(-1,null);
+                    call.cancel();
+                }
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    try {
+                        String responseData = response.body().string();
+                        JSONObject json = new JSONObject(responseData);
+                        int x = response.code();
+                        String y = Integer.toString(x);
+                        if(y.charAt(0)== '2'){
+                            HTTP_RESPONSE.onSuccess(x,json);
+                        }
+                        else{
+                            HTTP_RESPONSE.onFailure(x,json);
+                        }
+                    } catch (JSONException e) {
+                        HTTP_RESPONSE.onFailure(500,null);
+                    }
+                    response.close();
+                }
+            });
+        }catch(JSONException e){
+            HTTP_RESPONSE.onFailure(-1,null);
+        }
+
+    }
+
+    /**
      * this method is called when the user to get information about some other user , the returned body will differ according to type of requested user
      * @param {String} token [token of the user]
      * @param {int} id [id of the user]
-     * @param {HTTPResponse} httpResponse [httpResponse interface instance]
+     * @param {HTTPResponse} HTTP_RESPONSE [HTTPResponse interface instance]
      * @return {void}
      */
-    public static void getUser(String token, int id, final HTTPResponse httpResponse){
+    public static void getUser(String token, int id, final HTTPResponse HTTP_RESPONSE){
 
         OkHttpClient client= new OkHttpClient();
         Request request=new Request.Builder()
@@ -114,23 +203,23 @@ public class User{
                 .build();
         client.newCall(request).enqueue(new Callback() {
             public void onFailure(Call call, IOException e) {
-                httpResponse.onFailure(-1,null);
+                HTTP_RESPONSE.onFailure(-1,null);
                 call.cancel();
             }
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 int code=response.code();
                 String c=code+"";
-                String body=response.body().toString();
+                String body=response.body().string();
                 try {
                     JSONObject rr =new JSONObject(body);
                     if(c.charAt(0)=='2'){
-                        httpResponse.onSuccess(code,rr);
+                        HTTP_RESPONSE.onSuccess(code,rr);
 
                     }else {
-                        httpResponse.onFailure(code,rr);
+                        HTTP_RESPONSE.onFailure(code,rr);
                     }
                 }catch (JSONException e){
-                    httpResponse.onFailure(code,null);
+                    HTTP_RESPONSE.onFailure(code,null);
                 }
 
                 response.close();
@@ -145,15 +234,10 @@ public class User{
      * @param {String}       newPassword      [user's new password]
      * @param {String}       IeeeMembershipID [user's IEEE membership id]
      * @param {String}       phoneNumber      [user's phone number]
-     * @param {HTTPResponse} httpResponse     [HTTPResponse interface instance]
+     * @param {HTTPResponse} HTTP_RESPONSE     [HTTPResponse interface instance]
      * @return {void}
      */
-    public void editProfile(String token,
-                            String oldPassword,
-                            String newPassword,
-                            String IeeeMembershipID,
-                            String phoneNumber,
-                            final HTTPResponse httpResponse) {
+    public void editProfile(String token, String oldPassword, String newPassword, String IeeeMembershipID, String phoneNumber, final HTTPResponse HTTP_RESPONSE) {
 
         OkHttpClient client = new OkHttpClient();
         HashMap<String, String> body = new HashMap<>();
@@ -162,7 +246,7 @@ public class User{
         body.put("IEEE_membership_ID",IeeeMembershipID);
         body.put("phone_number",phoneNumber);
 
-        Request request = new Request.Builder().put(RequestBody.create(MediaType.parse("application/json"),
+        Request request = new Request.Builder().put(RequestBody.create(CONTENT_TYPE,
                 new JSONObject(body).toString()))
                 .addHeader("Authorization", token)
                 .addHeader("user_agent", "Android")
@@ -173,7 +257,7 @@ public class User{
             public void onFailure(Call call, IOException e) {
 
                 //No Internet Connection.
-                httpResponse.onFailure(-1, null);
+                HTTP_RESPONSE.onFailure(-1, null);
                 call.cancel();
             }
 
@@ -190,12 +274,12 @@ public class User{
 
                     try {
 
-                        JSONObject responseBody = new JSONObject(response.body().toString());
-                        httpResponse.onSuccess(statusCode, responseBody);
+                        JSONObject responseBody = new JSONObject(response.body().string());
+                        HTTP_RESPONSE.onSuccess(statusCode, responseBody);
 
                     } catch (JSONException e) {
 
-                        httpResponse.onFailure(500, null);
+                        HTTP_RESPONSE.onFailure(500, null);
                     }
 
                 } else {
@@ -204,11 +288,11 @@ public class User{
                     // and the call wasn't successful.
 
                     try {
-                        JSONObject responseBody = new JSONObject(response.body().toString());
-                        httpResponse.onFailure(statusCode, responseBody);
+                        JSONObject responseBody = new JSONObject(response.body().string());
+                        HTTP_RESPONSE.onFailure(statusCode, responseBody);
                     } catch (JSONException e) {
 
-                        httpResponse.onFailure(500, null);
+                        HTTP_RESPONSE.onFailure(500, null);
                     }
 
                 }
@@ -220,14 +304,13 @@ public class User{
 
     }
 
-
     /**
      * This method is called when the user logs out.
      * @param  {String}        token         [token of the user]
-     * @param  {HTTPResponse}  httpResponse  [httpResponse interface instance]
+     * @param  {HTTPResponse}  HTTP_RESPONSE  [HTTP_RESPONSE interface instance]
      * @return {void}
      */
-    public void logout(String token, final HTTPResponse httpResponse){
+    public void logout(String token, final HTTPResponse HTTP_RESPONSE){
 
         OkHttpClient ok = new OkHttpClient();
         Request request = new Request.Builder()
@@ -241,7 +324,7 @@ public class User{
 
             public void onFailure(Call call, IOException e) {
 
-                httpResponse.onFailure(-1, null);
+                HTTP_RESPONSE.onFailure(-1, null);
                 call.cancel();
             }
             @Override
@@ -254,19 +337,18 @@ public class User{
                     JSONObject j = new JSONObject(body);
                     if(code/100 == 2)
                     {
-                        httpResponse.onSuccess(code,j);
+                        HTTP_RESPONSE.onSuccess(code,j);
                     }
                     else
                     {
-                        httpResponse.onFailure(code,j);
+                        HTTP_RESPONSE.onFailure(code,j);
                     }
                 } catch (JSONException e) {
-                    httpResponse.onFailure(500,null);
+                    HTTP_RESPONSE.onFailure(500,null);
                 }
 
                 response.close();
             }
         });
     }
-
 }
