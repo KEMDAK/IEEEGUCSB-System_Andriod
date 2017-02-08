@@ -52,24 +52,7 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
 
             @Override
             public void onFailure(int statusCode, JSONObject body) {
-
-                if (statusCode == -1) {
-                    Snackbar.make(findViewById(R.id.email_sign_in_button), getString(R.string.error_connection),
-                            Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                        }
-                    }).show();
-                } else if (statusCode == 500) {
-                    Snackbar.make(findViewById(R.id.email_sign_in_button), getString(R.string.error_server_down),
-                            Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                        }
-                    }).show();
-                }
+                
             }
         };
 
