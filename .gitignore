@@ -15,6 +15,7 @@ out/
 
 # Gradle files
 .gradle/
+.idea/gradle.xml
 build/
 .externalNativeBuild
 .DS_Store
@@ -38,6 +39,7 @@ captures/
 *.iml
 .idea/workspace.xml
 .idea/libraries
+.idea/vcs.xml
 
 # Keystore files
 *.jks
