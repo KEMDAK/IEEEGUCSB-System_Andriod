@@ -6,19 +6,23 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 
+import com.google.gson.Gson;
+
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
+import org.ieeeguc.ieeeguc.fragments.user.UserIndex;
 import org.ieeeguc.ieeeguc.models.User;
 import org.json.JSONObject;
 
 /**
  * The main screen that offers the different sections of the application.
  */
-public class MainActivity extends Activity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends FragmentActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public static User loggedInUser;
     public static String token;
@@ -33,6 +37,20 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
         // Sets the class to be a listener to the navigation menu.
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // Fragment usage illustration
+        // craeting the fragment instance
+        UserIndex userIndex = new UserIndex();
+
+        // adding the needed variables to it
+        User[] users = new User[1];
+        users[0] = loggedInUser;
+        Bundle bundle = new Bundle();
+        bundle.putString("users", new Gson().toJson(users));
+        userIndex.setArguments(bundle);
+
+        // adding the fragment to the mainContainer
+        getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, userIndex).commit();
     }
 
     /**
