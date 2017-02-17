@@ -9,6 +9,62 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="      Update profile"
+            android:ems="10"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="80dp"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="29dp"
+            android:id="@+id/editText3" />
+
+        <AutoCompleteTextView
+            android:text="old password "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editText3"
+            android:layout_alignLeft="@+id/editText3"
+            android:layout_alignStart="@+id/editText3"
+            android:layout_marginTop="23dp"
+            android:id="@+id/oldPassword" />
+
+        <AutoCompleteTextView
+            android:text="new Password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/oldPassword"
+            android:layout_marginTop="42dp"
+            android:id="@+id/newPassword"
+            android:layout_alignLeft="@+id/oldPassword"
+            android:layout_alignStart="@+id/oldPassword" />
+
+        <Button
+            android:text="Update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignLeft="@+id/newPassword"
+            android:layout_alignStart="@+id/newPassword"
+            android:layout_marginLeft="47dp"
+            android:layout_marginStart="47dp"
+            android:layout_marginBottom="131dp"
+            android:id="@+id/update" />
+
+        <AutoCompleteTextView
+            android:text="membership ID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/newPassword"
+            android:layout_alignLeft="@+id/newPassword"
+            android:layout_alignStart="@+id/newPassword"
+            android:layout_marginTop="24dp"
+            android:id="@+id/memberID" />
+
     </RelativeLayout>
 
 </FrameLayout>

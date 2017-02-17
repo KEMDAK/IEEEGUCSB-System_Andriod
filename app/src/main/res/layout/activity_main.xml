@@ -15,6 +15,16 @@
         android:layout_height="match_parent"
         android:id="@+id/mainContainer">
 
+        <Button
+            android:id="@+id/add_sign_in_button"
+            style="?android:textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="add_user"
+            android:textStyle="bold"
+            android:onClick="addUserForNow"/>
+
     </FrameLayout>
 
     <android.support.design.widget.NavigationView

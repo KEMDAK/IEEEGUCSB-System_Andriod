@@ -20,6 +20,7 @@ import org.ieeeguc.ieeeguc.models.User.Gender;
 import org.ieeeguc.ieeeguc.models.User.Type;
 import org.json.JSONObject;
 
+import java.io.Console;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -50,7 +51,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
     /**
      * this method is called when the user click the button and the app attempt to log in
      */

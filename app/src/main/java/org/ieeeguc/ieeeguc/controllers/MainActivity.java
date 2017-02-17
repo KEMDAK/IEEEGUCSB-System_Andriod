@@ -118,5 +118,25 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+    /*
+ public void addUserForNow(String userToken,String type ,String email ,String password , String firstName ,String lastName ,String birthDate, String phoneNumber,
+                     String gender,String id , final HTTPResponse HTTP_RESPONSE){
+     User.addUser(userToken, type, email, password, firstName, lastName, birthDate, phoneNumber, gender, id, new HTTPResponse() {
+         @Override
+         public void onSuccess(int statusCode, JSONObject body) {
+
+         }
+
+         @Override
+         public void onFailure(int statusCode, JSONObject body) {
+
+         }
+     });
+ }
+
+ public void addUserForButton(){
+  addUserForNow();
+ }
+ */
 
 }
