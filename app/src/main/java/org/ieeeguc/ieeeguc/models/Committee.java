@@ -24,14 +24,14 @@ public class Committee {
     private String name;
     private String description;
     private ArrayList<User> members;
-    private int committeeId;
+    private int id;
 
-    public Committee(String name,String description,ArrayList<User> members,int committeeId){
+    public Committee(String name,String description,ArrayList<User> members,int id){
 
         this.name = name;
         this.description = description;
         this.members = members;
-        this.committeeId = committeeId;
+        this.id = id;
     }
 
     public String getName() {
@@ -46,16 +46,16 @@ public class Committee {
         return members;
     }
 
-    public int getCommitteeId() {
-        return committeeId;
+    public int getId() {
+        return id;
     }
 
     /**
      * This method is called to get all the existing committees in the database.
-     * @param  {HTTPResponse} httpResponse [instance of HTTPResponse interface]
+     * @param  {HTTPResponse} HTTP_RESPONSE [instance of HTTPResponse interface]
      * @return {void}
      */
-    public static void getAllCommittees(final HTTPResponse httpResponse){
+    public static void getAllCommittees(final HTTPResponse HTTP_RESPONSE){
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -67,12 +67,12 @@ public class Committee {
             public void onFailure(Call call, IOException e) {
 
                 // No Internet connection.
-                httpResponse.onFailure(-1,null);
+                HTTP_RESPONSE.onFailure(-1,null);
                 call.cancel();
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response){
 
                 int statusCode = response.code();
 
@@ -80,14 +80,14 @@ public class Committee {
                     String responseBody = response.body().string();
                     JSONObject body = new JSONObject(responseBody);
                     if(statusCode >= 200 && statusCode < 300){
-                        httpResponse.onSuccess(statusCode,body);
+                        HTTP_RESPONSE.onSuccess(statusCode,body);
                     }
                     else{
-                        httpResponse.onFailure(statusCode,body);
+                        HTTP_RESPONSE.onFailure(statusCode,body);
                     }
 
-                } catch (JSONException e) {
-                    httpResponse.onFailure(500,null);
+                } catch (Exception e) {
+                    HTTP_RESPONSE.onFailure(500,null);
                 }
             }
         });
