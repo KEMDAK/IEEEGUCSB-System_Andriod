@@ -1,6 +1,5 @@
 package org.ieeeguc.ieeeguc.controllers;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,7 +38,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         navigationView.setNavigationItemSelectedListener(this);
 
         // Fragment usage illustration
-        // craeting the fragment instance
+        // creating the fragment instance
         UserIndex userIndex = new UserIndex();
 
         // adding the needed variables to it
