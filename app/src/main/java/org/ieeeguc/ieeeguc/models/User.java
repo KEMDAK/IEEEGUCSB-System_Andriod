@@ -351,4 +351,43 @@ public class User{
             }
         });
     }
+
+    public static void getAllUser(final HTTPResponse HTTP_RESPONSE){
+
+        OkHttpClient ok = new OkHttpClient();
+
+        Request request = new Request.Builder().url("http://ieeeguc.org/api//user").build();
+
+        ok.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                HTTP_RESPONSE.onFailure(-1, null);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                int code = response.code();
+                String body = response.body().string();
+
+                try {
+                    JSONObject json = new JSONObject(body);
+                    if(code == 200)
+                    {
+                        HTTP_RESPONSE.onSuccess(code,json);
+                    }
+                    else
+                    {
+                        HTTP_RESPONSE.onFailure(code,json);
+                    }
+                } catch (JSONException e) {
+                    HTTP_RESPONSE.onFailure(500,null);
+                }
+
+                response.close();
+
+            }
+        });
+    }
 }
