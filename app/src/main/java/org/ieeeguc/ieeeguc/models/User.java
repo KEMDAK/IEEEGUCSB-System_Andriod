@@ -352,6 +352,10 @@ public class User{
         });
     }
 
+    /**
+     *  this method is called when the user wants alist of all the users from the data base
+     * @param {HttpResponce} HTTP_RESPONSE  (HTTP_RESPONSE Interface Instance)
+     */
     public static void getAllUser(final HTTPResponse HTTP_RESPONSE){
 
         OkHttpClient ok = new OkHttpClient();
