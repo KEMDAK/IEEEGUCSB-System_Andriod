@@ -11,9 +11,13 @@ import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static org.ieeeguc.ieeeguc.models.User.CONTENT_TYPE;
 
 /**
  * Created by abdelrahmen on 16/02/17.
@@ -92,5 +96,46 @@ public class Committee {
             }
         });
 
+    }
+    public void edit(int id , String token , String name , String description , final HTTPResponse HTTP_RESPONSE){
+        OkHttpClient client= new OkHttpClient();
+        JSONObject jsonBody = new JSONObject();
+        try{
+            jsonBody.put("name",name);
+            jsonBody.put("description",description);
+            RequestBody body = RequestBody.create(CONTENT_TYPE, jsonBody.toString());
+        Request request=new Request.Builder()
+                .url("http://ieeeguc.org/api/committee/"+id)
+                .addHeader("Authorization",token)
+                .addHeader("user_agent","Android")
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            public void onFailure(Call call, IOException e) {
+                HTTP_RESPONSE.onFailure(-1,null);
+                call.cancel();
+            }
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                int code=response.code();
+                String c=code+"";
+                String body=response.body().string();
+                try {
+                    JSONObject rr =new JSONObject(body);
+                    if(c.charAt(0)=='2'){
+                        HTTP_RESPONSE.onSuccess(code,rr);
+
+                    }else {
+                        HTTP_RESPONSE.onFailure(code,rr);
+                    }
+                }catch (JSONException e){
+                    HTTP_RESPONSE.onFailure(code,null);
+                }
+
+                response.close();
+            }
+        });
+    }catch (JSONException e){
+            HTTP_RESPONSE.onFailure(-1,null);
+        }
     }
 }
