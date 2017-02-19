@@ -13,7 +13,10 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static org.ieeeguc.ieeeguc.models.User.CONTENT_TYPE;
 
 /**
  * Created by abdelrahmen on 16/02/17.
@@ -91,6 +94,56 @@ public class Committee {
                 }
             }
         });
+
+    }
+
+    public static void addCommittee(String token,String name,String description,final HTTPResponse HTTP_RESPONSE){
+        OkHttpClient client = new OkHttpClient();
+        JSONObject j = new JSONObject();
+        try {
+            j.put("name", name);
+            j.put("description",description);
+            RequestBody body = RequestBody.create(CONTENT_TYPE,j.toString());
+            Request request = new Request.Builder()
+                    .url("http://ieeeguc.org/api/committee")
+                    .header("user_agent","Android")
+                    .header("Authorization",token)
+                    .post(body)
+                    .build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    HTTP_RESPONSE.onFailure(-1, null);
+                    call.cancel();
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+
+                    int code = response.code();
+                    String body = response.body().string();
+
+                    try {
+                        JSONObject j = new JSONObject(body);
+                        if(code/100 == 2)
+                        {
+                            HTTP_RESPONSE.onSuccess(code,j);
+                        }
+                        else
+                        {
+                            HTTP_RESPONSE.onFailure(code,j);
+                        }
+                    } catch (JSONException e) {
+                        HTTP_RESPONSE.onFailure(500,null);
+                    }
+
+                    response.close();
+                }
+            });
+        } catch (JSONException e) {
+
+            HTTP_RESPONSE.onFailure(-1,null);
+        }
 
     }
 }
