@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static org.ieeeguc.ieeeguc.models.User.getAllUser;
 import static org.ieeeguc.ieeeguc.models.User.login;
 
 /**
@@ -47,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 attemptLogin() ;
             }
+
         });
     }
 

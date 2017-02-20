@@ -360,7 +360,7 @@ public class User{
 
         OkHttpClient ok = new OkHttpClient();
 
-        Request request = new Request.Builder().url("http://ieeeguc.org/api//user").build();
+        Request request = new Request.Builder().url("http://ieeeguc.org/api/user").build();
 
         ok.newCall(request).enqueue(new Callback() {
             @Override
