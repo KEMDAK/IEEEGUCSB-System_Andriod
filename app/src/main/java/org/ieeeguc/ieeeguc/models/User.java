@@ -1,5 +1,7 @@
 package org.ieeeguc.ieeeguc.models;
 
+import android.widget.TextView;
+
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -164,7 +166,7 @@ public class User{
                     call.cancel();
                 }
                 @Override
-                public void onResponse(Call call, Response response) throws IOException {
+                public void onResponse(Call call, Response response) {
                     try {
                         String responseData = response.body().string();
                         JSONObject json = new JSONObject(responseData);
@@ -176,7 +178,7 @@ public class User{
                         else{
                             HTTP_RESPONSE.onFailure(x,json);
                         }
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         HTTP_RESPONSE.onFailure(500,null);
                     }
                     response.close();
@@ -260,7 +262,7 @@ public class User{
                 HTTP_RESPONSE.onFailure(-1,null);
                 call.cancel();
             }
-            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+            public void onResponse(Call call, okhttp3.Response response)  {
                 try {
                     String responseData = response.body().string();
                     JSONObject json = new JSONObject(responseData);
@@ -272,7 +274,7 @@ public class User{
                     else{
                         HTTP_RESPONSE.onFailure(x,json);
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     HTTP_RESPONSE.onFailure(500,null);
                 }
                 response.close();
