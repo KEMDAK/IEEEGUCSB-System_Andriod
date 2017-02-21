@@ -19,6 +19,8 @@ import org.ieeeguc.ieeeguc.fragments.user.UserIndex;
 import org.ieeeguc.ieeeguc.models.User;
 import org.json.JSONObject;
 
+import static android.R.attr.type;
+
 /**
  * The main screen that offers the different sections of the application.
  */
@@ -38,6 +40,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+      //  loggedInUser.addUser(token,'member');
         // Fragment usage illustration
         // craeting the fragment instance
         UserIndex userIndex = new UserIndex();
@@ -118,25 +121,5 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    /*
- public void addUserForNow(String userToken,String type ,String email ,String password , String firstName ,String lastName ,String birthDate, String phoneNumber,
-                     String gender,String id , final HTTPResponse HTTP_RESPONSE){
-     User.addUser(userToken, type, email, password, firstName, lastName, birthDate, phoneNumber, gender, id, new HTTPResponse() {
-         @Override
-         public void onSuccess(int statusCode, JSONObject body) {
-
-         }
-
-         @Override
-         public void onFailure(int statusCode, JSONObject body) {
-
-         }
-     });
- }
-
- public void addUserForButton(){
-  addUserForNow();
- }
- */
 
 }

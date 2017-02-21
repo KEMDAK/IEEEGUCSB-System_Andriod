@@ -29,7 +29,7 @@ import static android.os.Build.VERSION_CODES.N;
  * A simple {@link Fragment} subclass.
  */
 public class UserUpdate extends Fragment {
-    private User[] users;
+    private User user;
     private MainActivity mainAct;
     private View thisView ;
     private EditText New;
@@ -42,9 +42,9 @@ public class UserUpdate extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_user_update, container, false);
         thisView = view ;
-        users = new Gson().fromJson(getArguments().getString("users"), User[].class);
-        ((TextView) view.findViewById(R.id.memberID)).setText(users[0].getIeeeMembershipID());
-        ((TextView) view.findViewById(R.id.UserPhoneNumber)).setText(users[0].getPhoneNumber());
+        user = new Gson().fromJson(getArguments().getString("users"), User.class);
+        ((TextView) view.findViewById(R.id.memberID)).setText(user.getIeeeMembershipID());
+        ((TextView) view.findViewById(R.id.UserPhoneNumber)).setText(user.getPhoneNumber());
         New = ((EditText) view.findViewById(R.id.newPassword));
         old = ((EditText) view.findViewById(R.id.oldPassword));
         memberID = ((EditText) view.findViewById(R.id.memberID));
@@ -57,9 +57,9 @@ public class UserUpdate extends Fragment {
               String phoneNumber1 = phoneNumber.getText().toString();
               String memberShipID = memberID.getText().toString();
               if (newPassword.length() != 0 && oldPassword.length() != 0) {
-                  users[0].editProfile(mainAct.token, oldPassword, newPassword, memberShipID, phoneNumber1, new HTTPResponse() {
+                  user.editProfile(mainAct.token, oldPassword, newPassword, memberShipID, phoneNumber1, new HTTPResponse() {
                       public void onSuccess(int statusCode, JSONObject body) {
-                          Snackbar.make(thisView.findViewById(R.id.), getString(R.string.error_incorrect_credentials),
+                          Snackbar.make(thisView.findViewById(R.id.update), "profile updated successfully",
                                   Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
                               @Override
                               public void onClick(View view) {
@@ -70,7 +70,7 @@ public class UserUpdate extends Fragment {
 
                       public void onFailure(int statusCode, JSONObject body) {
                           if(statusCode == 401) {
-                              Snackbar.make(thisView.findViewById(R.id.email_sign_in_button), getString(R.string.error_incorrect_credentials),
+                              Snackbar.make(thisView.findViewById(R.id.update), getString(R.string.error_incorrect_credentials),
                                       Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
                                   @Override
                                   public void onClick(View view) {
@@ -80,7 +80,7 @@ public class UserUpdate extends Fragment {
                           }
 
                           else if(statusCode == 500) {
-                              Snackbar.make(thisView.findViewById(R.id.email_sign_in_button), getString(R.string.error_server_down),
+                              Snackbar.make(thisView.findViewById(R.id.update), getString(R.string.error_server_down),
                                       Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
                                   @Override
                                   public void onClick(View view) {
@@ -89,7 +89,7 @@ public class UserUpdate extends Fragment {
                               }).show();
                           }
                           else if(statusCode == -1) {
-                              Snackbar.make(thisView.findViewById(R.id.email_sign_in_button), getString(R.string.error_connection),
+                              Snackbar.make(thisView.findViewById(R.id.update), getString(R.string.error_connection),
                                       Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
                                   @Override
                                   public void onClick(View view) {
@@ -102,13 +102,13 @@ public class UserUpdate extends Fragment {
               } else {
 
                   if (newPassword.length() != 0) {
-                      Snackbar.make(thisView.findViewById(R.id.newPassword), getString(R.string.error_empty_password),
+                      Snackbar.make(thisView.findViewById(R.id.update), "New Password is required",
                               Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
                           @Override
                           public void onClick(View view) {}}).show();
                   }
                   else if(oldPassword.length() != 0) {
-                      Snackbar.make(thisView.findViewById(R.id.oldPassword), getString(R.string.error_empty_password),
+                      Snackbar.make(thisView.findViewById(R.id.update), "Old Password is required",
                               Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
                           @Override
                           public void onClick(View view) {
@@ -116,16 +116,6 @@ public class UserUpdate extends Fragment {
                           }
                       }).show();
                   }
-                  else{
-                      Snackbar.make(thisView.findViewById(R.id.email_sign_in_button), getString(R.string.error_empty_credentials),
-                              Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                          @Override
-                          public void onClick(View view) {
-
-                          }
-                      }).show();
-                      }
-
               }
           }
 }
