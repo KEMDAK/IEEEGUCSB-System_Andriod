@@ -29,7 +29,7 @@ public class UserIndex extends Fragment {
         users = new Gson().fromJson(getArguments().getString("users"), User[].class);
 
 
-        ((TextView) view.findViewById(R.id.text)).setText(users[0].getEmail());
+//        ((TextView) view.findViewById(R.id.text)).setText(users[0].getEmail());
         return view;
     }
 

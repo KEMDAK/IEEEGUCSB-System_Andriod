@@ -29,8 +29,6 @@ import static android.os.Build.VERSION_CODES.N;
  * A simple {@link Fragment} subclass.
  */
 public class UserUpdate extends Fragment {
-    private User user;
-    private MainActivity mainAct;
     private View thisView ;
     private EditText New;
     private EditText old ;
@@ -42,80 +40,80 @@ public class UserUpdate extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_user_update, container, false);
         thisView = view ;
-        user = new Gson().fromJson(getArguments().getString("users"), User.class);
-        ((TextView) view.findViewById(R.id.memberID)).setText(user.getIeeeMembershipID());
-        ((TextView) view.findViewById(R.id.UserPhoneNumber)).setText(user.getPhoneNumber());
+
+        ((TextView) view.findViewById(R.id.memberID)).setText(MainActivity.loggedInUser.getIeeeMembershipID());
+        ((TextView) view.findViewById(R.id.UserPhoneNumber)).setText(MainActivity.loggedInUser.getPhoneNumber());
         New = ((EditText) view.findViewById(R.id.newPassword));
         old = ((EditText) view.findViewById(R.id.oldPassword));
         memberID = ((EditText) view.findViewById(R.id.memberID));
         phoneNumber = ((EditText) view.findViewById(R.id.UserPhoneNumber));
         return view ;
     }
-          public void updateProfile(View updateview) {
-              String newPassword = New.getText().toString();
-              String oldPassword = old.getText().toString();
-              String phoneNumber1 = phoneNumber.getText().toString();
-              String memberShipID = memberID.getText().toString();
-              if (newPassword.length() != 0 && oldPassword.length() != 0) {
-                  user.editProfile(mainAct.token, oldPassword, newPassword, memberShipID, phoneNumber1, new HTTPResponse() {
-                      public void onSuccess(int statusCode, JSONObject body) {
-                          Snackbar.make(thisView.findViewById(R.id.update), "profile updated successfully",
-                                  Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                              @Override
-                              public void onClick(View view) {
+    public void updateProfile(View V) {
+        String newPassword = New.getText().toString();
+        String oldPassword = old.getText().toString();
+        String phoneNumber1 = phoneNumber.getText().toString();
+        String memberShipID = memberID.getText().toString();
+        if (newPassword.length() != 0 && oldPassword.length() != 0) {
+            MainActivity.loggedInUser.editProfile(MainActivity.token, oldPassword, newPassword, memberShipID, phoneNumber1, new HTTPResponse() {
+                public void onSuccess(int statusCode, JSONObject body) {
+                    Snackbar.make(thisView.findViewById(R.id.update), "profile updated successfully",
+                            Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
 
-                              }
-                          }).show();
-                      }
+                        }
+                    }).show();
+                }
 
-                      public void onFailure(int statusCode, JSONObject body) {
-                          if(statusCode == 401) {
-                              Snackbar.make(thisView.findViewById(R.id.update), getString(R.string.error_incorrect_credentials),
-                                      Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                                  @Override
-                                  public void onClick(View view) {
+                public void onFailure(int statusCode, JSONObject body) {
+                    if(statusCode == 401) {
+                        Snackbar.make(thisView.findViewById(R.id.update), getString(R.string.error_incorrect_credentials),
+                                Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
 
-                                  }
-                              }).show();
-                          }
+                            }
+                        }).show();
+                    }
 
-                          else if(statusCode == 500) {
-                              Snackbar.make(thisView.findViewById(R.id.update), getString(R.string.error_server_down),
-                                      Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                                  @Override
-                                  public void onClick(View view) {
+                    else if(statusCode == 500) {
+                        Snackbar.make(thisView.findViewById(R.id.update), getString(R.string.error_server_down),
+                                Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
 
-                                  }
-                              }).show();
-                          }
-                          else if(statusCode == -1) {
-                              Snackbar.make(thisView.findViewById(R.id.update), getString(R.string.error_connection),
-                                      Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                                  @Override
-                                  public void onClick(View view) {
+                            }
+                        }).show();
+                    }
+                    else if(statusCode == -1) {
+                        Snackbar.make(thisView.findViewById(R.id.update), getString(R.string.error_connection),
+                                Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
 
-                                  }
-                              }).show();
-                          }
-                      }
-                  });
-              } else {
+                            }
+                        }).show();
+                    }
+                }
+            });
+        } else {
 
-                  if (newPassword.length() != 0) {
-                      Snackbar.make(thisView.findViewById(R.id.update), "New Password is required",
-                              Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                          @Override
-                          public void onClick(View view) {}}).show();
-                  }
-                  else if(oldPassword.length() != 0) {
-                      Snackbar.make(thisView.findViewById(R.id.update), "Old Password is required",
-                              Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                          @Override
-                          public void onClick(View view) {
+            if (newPassword.length() != 0) {
+                Snackbar.make(thisView.findViewById(R.id.update), "New Password is required",
+                        Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {}}).show();
+            }
+            else if(oldPassword.length() != 0) {
+                Snackbar.make(thisView.findViewById(R.id.update), "Old Password is required",
+                        Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
 
-                          }
-                      }).show();
-                  }
-              }
-          }
+                    }
+                }).show();
+            }
+        }
+    }
 }
