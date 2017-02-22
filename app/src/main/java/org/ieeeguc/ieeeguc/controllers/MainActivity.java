@@ -1,6 +1,5 @@
 package org.ieeeguc.ieeeguc.controllers;
 
-import android.support.v4.app.FragmentActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,9 +18,6 @@ import org.ieeeguc.ieeeguc.fragments.user.UserIndex;
 import org.ieeeguc.ieeeguc.fragments.user.UserUpdate;
 import org.ieeeguc.ieeeguc.models.User;
 import org.json.JSONObject;
-
-import static android.R.attr.type;
-import static org.ieeeguc.ieeeguc.R.menu.drawer;
 
 /**
  * The main screen that offers the different sections of the application.
@@ -114,8 +110,8 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             logout();
         }
         else if(id == R.id.User_Update){
-            UserUpdate fragment1 = new UserUpdate();
-            getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, fragment1).commit();
+            UserUpdate updateFragment = new UserUpdate();
+            getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, updateFragment).commit();
 
         }
 

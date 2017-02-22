@@ -9,8 +9,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-<<<<<<< HEAD
-=======
 
         <TextView
             android:layout_width="wrap_content"
@@ -19,7 +17,7 @@
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:id="@+id/text" />
->>>>>>> f61a906126be6a9b82f92c95623bade16fb9d6bb
+
     </RelativeLayout>
 
 </FrameLayout>

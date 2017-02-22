@@ -1,29 +1,20 @@
 package org.ieeeguc.ieeeguc.fragments.user;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
-import org.ieeeguc.ieeeguc.controllers.LoginActivity;
 import org.ieeeguc.ieeeguc.controllers.MainActivity;
-import org.ieeeguc.ieeeguc.models.User;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
-import static android.os.Build.VERSION_CODES.N;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +25,7 @@ public class UserUpdate extends Fragment {
     private EditText old ;
     private EditText memberID;
     private EditText phoneNumber;
+    private Button update ;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,9 +39,16 @@ public class UserUpdate extends Fragment {
         old = ((EditText) view.findViewById(R.id.oldPassword));
         memberID = ((EditText) view.findViewById(R.id.memberID));
         phoneNumber = ((EditText) view.findViewById(R.id.UserPhoneNumber));
+        update = (Button) view.findViewById(R.id.update);
+        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateProfile(); ;
+            }
+        });
         return view ;
     }
-    public void updateProfile(View V) {
+    public void updateProfile() {
         String newPassword = New.getText().toString();
         String oldPassword = old.getText().toString();
         String phoneNumber1 = phoneNumber.getText().toString();
