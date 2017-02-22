@@ -1,8 +1,6 @@
 package org.ieeeguc.ieeeguc.controllers;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,7 +40,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
 
         // Fragment usage illustration
-        // craeting the fragment instance
+        // creating the fragment instance
         UserIndex userIndex = new UserIndex();
 
         // adding the needed variables to it

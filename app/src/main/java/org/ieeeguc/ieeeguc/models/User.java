@@ -360,7 +360,7 @@ public class User{
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response){
 
                 //Getting the status code.
                 int statusCode = response.code();
@@ -375,7 +375,7 @@ public class User{
                         JSONObject responseBody = new JSONObject(response.body().string());
                         HTTP_RESPONSE.onSuccess(statusCode, responseBody);
 
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
 
                         HTTP_RESPONSE.onFailure(500, null);
                     }
@@ -388,7 +388,7 @@ public class User{
                     try {
                         JSONObject responseBody = new JSONObject(response.body().string());
                         HTTP_RESPONSE.onFailure(statusCode, responseBody);
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
 
                         HTTP_RESPONSE.onFailure(500, null);
                     }
