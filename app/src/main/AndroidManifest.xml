@@ -27,6 +27,8 @@
             android:name=".controllers.MainActivity"
             android:label="@string/app_name">
         </activity>
+
+           
     </application>
 
 </manifest>

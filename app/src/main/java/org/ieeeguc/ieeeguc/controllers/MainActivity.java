@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
 import org.ieeeguc.ieeeguc.fragments.user.UserIndex;
+import org.ieeeguc.ieeeguc.fragments.user.UserShow;
 import org.ieeeguc.ieeeguc.models.User;
 import org.json.JSONObject;
 
@@ -110,6 +111,20 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
             // When the logout navigation item is clicked logs out .
             logout();
+        }
+        else if(id==R.id.user_show){
+            //When the Show user navigation item is clicked show user info
+            UserShow userShow = new UserShow();
+
+            // adding the variables to the fragment
+
+            Bundle bundle = new Bundle();
+            bundle.putString("user_show", new Gson().toJson(loggedInUser));
+            userShow.setArguments(bundle);
+
+            // adding the fragment to the mainContainer
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, userShow).commit();
         }
 
         // Closes the drawer menu after the item is selected.
