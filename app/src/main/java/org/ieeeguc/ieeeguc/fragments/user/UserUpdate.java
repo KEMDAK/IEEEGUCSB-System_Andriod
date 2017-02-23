@@ -62,15 +62,15 @@ public class UserUpdate extends Fragment {
         String phoneNumber1 = phoneNumber.getText().toString();
         String memberShipID = memberID.getText().toString();
 
-        if (!(newPassword.isEmpty()) && !(oldPassword.isEmpty()) && !(phoneNumber1.isEmpty())) {
+        if (!(oldPassword.isEmpty())) {
             MainActivity.loggedInUser.editProfile(MainActivity.token, oldPassword, newPassword, memberShipID, phoneNumber1, new HTTPResponse() {
                 public void onSuccess(int statusCode, JSONObject body) {
                     notifyUser("profile updated Successfully");
                 }
 
                 public void onFailure(int statusCode, JSONObject body) {
-                    if(statusCode/100 == 4) {
-                        notifyUser(getString(R.string.error_incorrect_credentials));
+                    if(statusCode == 403) {
+                        notifyUser("Old Password not Correct");
                     }
 
                     else if(statusCode == 500) {
@@ -82,16 +82,7 @@ public class UserUpdate extends Fragment {
                 }
             });
         } else {
-
-            if (newPassword.isEmpty()) {
-                notifyUser("New Password is Required");
-            }
-            else if(oldPassword.isEmpty()) {
-               notifyUser("Old Password is Required");
-            }
-            else if(phoneNumber1.isEmpty()){
-                notifyUser("Correct Phone Number is required");
-            }
+            notifyUser("Old Password is Required");
         }
     }
 }
