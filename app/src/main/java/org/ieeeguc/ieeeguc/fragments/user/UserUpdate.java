@@ -52,7 +52,7 @@ public class UserUpdate extends Fragment {
         String phoneNumber1 = phoneNumber.getText().toString();
         String memberShipID = memberID.getText().toString();
 
-        if (!(newPassword.isEmpty()) && !(oldPassword.isEmpty())) {
+        if (!(newPassword.isEmpty()) && !(oldPassword.isEmpty()) && !(phoneNumber1.isEmpty() || phoneNumber1.length()!=13)) {
             MainActivity.loggedInUser.editProfile(MainActivity.token, oldPassword, newPassword, memberShipID, phoneNumber1, new HTTPResponse() {
                 public void onSuccess(int statusCode, JSONObject body) {
                     Snackbar.make(getActivity().findViewById(android.R.id.content), "profile updated successfully",
@@ -105,6 +105,15 @@ public class UserUpdate extends Fragment {
             }
             else if(oldPassword.isEmpty()) {
                 Snackbar.make(getActivity().findViewById(android.R.id.content), "Old Password is required",
+                        Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                }).show();
+            }
+            else if(phoneNumber1.isEmpty() || phoneNumber1.length()!= 13){
+                Snackbar.make(getActivity().findViewById(android.R.id.content), "Correct Phone Number is required",
                         Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
