@@ -46,80 +46,51 @@ public class UserUpdate extends Fragment {
         });
         return view ;
     }
+
+    public void notifyUser(String message){
+        Snackbar.make(getActivity().findViewById(android.R.id.content), message,
+                Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        }).show();
+    }
     public void updateProfile() {
         String newPassword = newPass.getText().toString();
         String oldPassword = oldPass.getText().toString();
         String phoneNumber1 = phoneNumber.getText().toString();
         String memberShipID = memberID.getText().toString();
 
-        if (!(newPassword.isEmpty()) && !(oldPassword.isEmpty()) && !(phoneNumber1.isEmpty() || phoneNumber1.length()!=13)) {
+        if (!(newPassword.isEmpty()) && !(oldPassword.isEmpty()) && !(phoneNumber1.isEmpty())) {
             MainActivity.loggedInUser.editProfile(MainActivity.token, oldPassword, newPassword, memberShipID, phoneNumber1, new HTTPResponse() {
                 public void onSuccess(int statusCode, JSONObject body) {
-                    Snackbar.make(getActivity().findViewById(android.R.id.content), "profile updated successfully",
-                            Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                        }
-                    }).show();
+                    notifyUser("profile updated Successfully");
                 }
 
                 public void onFailure(int statusCode, JSONObject body) {
-                    if(statusCode == 401) {
-                        Snackbar.make(getActivity().findViewById(android.R.id.content), getString(R.string.error_incorrect_credentials),
-                                Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-
-                            }
-                        }).show();
+                    if(statusCode/100 == 4) {
+                        notifyUser(getString(R.string.error_incorrect_credentials));
                     }
 
                     else if(statusCode == 500) {
-                        Snackbar.make(getActivity().findViewById(android.R.id.content), getString(R.string.error_server_down),
-                                Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-
-                            }
-                        }).show();
+                       notifyUser(getString(R.string.error_server_down));
                     }
                     else if(statusCode == -1) {
-                        Snackbar.make(getActivity().findViewById(android.R.id.content), getString(R.string.error_connection),
-                                Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-
-                            }
-                        }).show();
+                        notifyUser(getString(R.string.error_connection));
                     }
                 }
             });
         } else {
 
             if (newPassword.isEmpty()) {
-                Snackbar.make(getActivity().findViewById(android.R.id.content), "New Password is required",
-                        Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {}}).show();
+                notifyUser("New Password is Required");
             }
             else if(oldPassword.isEmpty()) {
-                Snackbar.make(getActivity().findViewById(android.R.id.content), "Old Password is required",
-                        Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                    }
-                }).show();
+               notifyUser("Old Password is Required");
             }
-            else if(phoneNumber1.isEmpty() || phoneNumber1.length()!= 13){
-                Snackbar.make(getActivity().findViewById(android.R.id.content), "Correct Phone Number is required",
-                        Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                    }
-                }).show();
+            else if(phoneNumber1.isEmpty()){
+                notifyUser("Correct Phone Number is required");
             }
         }
     }
