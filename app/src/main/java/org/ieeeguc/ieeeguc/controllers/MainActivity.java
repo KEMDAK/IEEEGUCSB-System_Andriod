@@ -10,11 +10,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 
-import com.google.gson.Gson;
-
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
-import org.ieeeguc.ieeeguc.fragments.user.UserIndex;
 import org.ieeeguc.ieeeguc.fragments.user.UserUpdate;
 import org.ieeeguc.ieeeguc.models.User;
 import org.json.JSONObject;
@@ -33,8 +30,11 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//for testing
+        UserUpdate updateFragment = new UserUpdate();
+        getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, updateFragment).commit();
 
-
+        /*
         // Fragment usage illustration
         // creating the fragment instance
         UserIndex userIndex = new UserIndex();
@@ -48,7 +48,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
         // adding the fragment to the mainContainer
         getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, userIndex).commit();
-
+*/
     }
     /**
      * This method is called when the user clicks the log out item from the slide menu.
