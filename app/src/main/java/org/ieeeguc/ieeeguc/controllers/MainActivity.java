@@ -30,10 +30,12 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//for testing
-        UserUpdate updateFragment = new UserUpdate();
-        getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, updateFragment).commit();
 
+        // Sets the class to be a listener to the navigation menu.
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        /** testing starts here **/
         /*
         // Fragment usage illustration
         // creating the fragment instance
@@ -112,7 +114,6 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         else if(id == R.id.User_Update){
             UserUpdate updateFragment = new UserUpdate();
             getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, updateFragment).commit();
-
         }
 
         // Closes the drawer menu after the item is selected.
