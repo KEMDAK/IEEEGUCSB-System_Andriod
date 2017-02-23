@@ -15,7 +15,6 @@ out/
 
 # Gradle files
 .gradle/
-.idea/gradle.xml
 build/
 .externalNativeBuild
 .DS_Store
@@ -37,6 +36,8 @@ captures/
 
 # Intellij
 *.iml
+.idea/gradle.xml
+.idea/inspectionProfiles
 .idea/workspace.xml
 .idea/libraries
 .idea/vcs.xml
