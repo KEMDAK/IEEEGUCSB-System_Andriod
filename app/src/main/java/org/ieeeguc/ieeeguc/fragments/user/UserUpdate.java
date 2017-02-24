@@ -60,7 +60,7 @@ public class UserUpdate extends Fragment {
         String phoneNumber1 = phoneNumber.getText().toString();
         String memberShipID = memberID.getText().toString();
 
-        if (!(oldPassword.isEmpty()) && phoneNumber1.matches("/^\\+?\\d+-?\\d+-?\\d+$/i")) {
+        if (!(oldPassword.isEmpty()) && phoneNumber1.matches("\\+?\\d\\d\\d-?\\d\\d\\d-?\\d\\d\\d?\\d?\\d?\\d?")) {
             MainActivity.loggedInUser.editProfile(MainActivity.token, oldPassword, newPassword, memberShipID, phoneNumber1, new HTTPResponse() {
                 public void onSuccess(int statusCode, JSONObject body) {
                     MainActivity.createSnackBar("profile updated Successfully");
