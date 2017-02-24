@@ -10,8 +10,10 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
 import org.ieeeguc.ieeeguc.models.User;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,8 +29,22 @@ public class UserShow extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+
         View view = inflater.inflate(R.layout.fragment_user_show, container, false);
-        user = new Gson().fromJson(getArguments().getString("user_show"), User.class);
+        int id = new Gson().fromJson(getArguments().getString("user_id"),Integer.class);
+        String token  = new Gson().fromJson(getArguments().getString("token"),String.class);
+        User.getUser(token, id, new HTTPResponse() {
+            @Override
+            public void onSuccess(int statusCode, JSONObject body) {
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, JSONObject body) {
+
+            }
+        });
         ((TextView) view.findViewById(R.id.name)).setText(user.getFirstName()+" "+user.getLastName());
         ((TextView) view.findViewById(R.id.email)).setText(user.getEmail());
         ((TextView) view.findViewById(R.id.id)).setText(user.getId()+"");

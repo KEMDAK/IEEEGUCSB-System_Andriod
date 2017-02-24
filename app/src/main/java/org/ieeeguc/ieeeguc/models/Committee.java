@@ -97,6 +97,15 @@ public class Committee {
 
     }
 
+    /**
+     * This Method is used to create a new committee
+     * @param {string} token [token of the logged in user]
+     * @param {string} name [name of the committee]
+     * @param {string} description [description of the committee]
+     * @param {HttpResponse} HTTP_RESPONSE [http interface instance which is the response coming from the server after creating the new committee]
+     * @return {void}
+     */
+
     public static void addCommittee(String token,String name,String description,final HTTPResponse HTTP_RESPONSE){
         OkHttpClient client = new OkHttpClient();
         JSONObject j = new JSONObject();
@@ -118,31 +127,39 @@ public class Committee {
                 }
 
                 @Override
-                public void onResponse(Call call, Response response) throws IOException {
+                public void onResponse(Call call, Response response){
 
                     int code = response.code();
-                    String body = response.body().string();
-
-                    try {
-                        JSONObject j = new JSONObject(body);
-                        if(code/100 == 2)
-                        {
+                    String body = null;
+                    if(code/100 == 2)
+                    {
+                        try {
+                            JSONObject j = new JSONObject(body);
                             HTTP_RESPONSE.onSuccess(code,j);
+
+                        } catch (Exception e) {
+                            HTTP_RESPONSE.onFailure(500,null);
                         }
-                        else
-                        {
-                            HTTP_RESPONSE.onFailure(code,j);
-                        }
-                    } catch (JSONException e) {
-                        HTTP_RESPONSE.onFailure(500,null);
+
                     }
+                    else
+                    {
+                        try {
+                            JSONObject j = new JSONObject(body);
+                            HTTP_RESPONSE.onSuccess(code,j);
+
+                        } catch (Exception e) {
+                            HTTP_RESPONSE.onFailure(500,null);
+                        }
+                    }
+
 
                     response.close();
                 }
             });
         } catch (JSONException e) {
 
-            HTTP_RESPONSE.onFailure(-1,null);
+            HTTP_RESPONSE.onFailure(500,null);
         }
 
     }
