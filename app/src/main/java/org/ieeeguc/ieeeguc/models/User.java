@@ -1,7 +1,5 @@
 package org.ieeeguc.ieeeguc.models;
 
-import android.widget.TextView;
-
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,8 +15,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
-import static org.ieeeguc.ieeeguc.controllers.MainActivity.token;
 
 /**
  * Class to be used as a container for the user.
@@ -189,44 +185,6 @@ public class User{
         }
 
     }
-
-    /**
-     * this method is called when a user wants to get the info of a specific committee
-     * @param {String} id [id of the desired Committee]
-     * @param {HTTPResponse} HTTP_RESPONSE [HTTPResponse interface instance]
-     * @return {void}
-     */
-    public static void getCommittee(String id,final HTTPResponse HTTP_RESPONSE){
-        OkHttpClient client= new OkHttpClient();
-        Request request=new Request.Builder()
-                .url("http://ieeeguc.org/api/Committee/"+id)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-            public void onFailure(Call call, IOException e) {
-                HTTP_RESPONSE.onFailure(-1,null);
-                call.cancel();
-            }
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    String responseData = response.body().string();
-                    JSONObject json = new JSONObject(responseData);
-                    int x = response.code();
-                    String y = Integer.toString(x);
-                    if(y.charAt(0)== '2'){
-                        HTTP_RESPONSE.onSuccess(x,json);
-                    }
-                    else{
-                        HTTP_RESPONSE.onFailure(x,json);
-                    }
-                } catch (JSONException e) {
-                    HTTP_RESPONSE.onFailure(500,null);
-                }
-                response.close();
-            }
-        });
-    }
-
     /**
      * this method is called when a user of Type at least Upper Board wants to create a user in the Database
      * @param {String} userToken [token of the requesting user]
@@ -281,7 +239,7 @@ public class User{
             }
         });
         }catch(JSONException e){
-            HTTP_RESPONSE.onFailure(-1,null);
+            HTTP_RESPONSE.onFailure(500,null);
         }
     }
     /**

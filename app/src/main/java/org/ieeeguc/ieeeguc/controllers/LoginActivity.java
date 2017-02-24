@@ -6,12 +6,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+
 import com.google.gson.Gson;
+
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
 import org.ieeeguc.ieeeguc.models.User;
@@ -19,11 +20,8 @@ import org.ieeeguc.ieeeguc.models.User.Gender;
 import org.ieeeguc.ieeeguc.models.User.Type;
 import org.json.JSONObject;
 
-import java.io.Console;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static org.ieeeguc.ieeeguc.models.User.login;
 
 /**
  * A login screen that offers login via email/password.
@@ -58,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         String passwordText = password.getText().toString() ;
 
         if (emailText.length()!= 0 && passwordText.length()!= 0) {
-            login(emailText, passwordText, new HTTPResponse() {
+            User.login(emailText, passwordText, new HTTPResponse() {
 
                 @Override
                 public void onSuccess(int statusCode, JSONObject body) {

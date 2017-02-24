@@ -31,19 +31,24 @@ public class UserUpdate extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_user_update, container, false);
 
+        //initializing values for ID and phone number
         ((TextView) view.findViewById(R.id.memberID)).setText(MainActivity.loggedInUser.getIeeeMembershipID());
         ((TextView) view.findViewById(R.id.UserPhoneNumber)).setText(MainActivity.loggedInUser.getPhoneNumber());
+
+        //referencing class variables to match the view
         newPass = ((EditText) view.findViewById(R.id.newPassword));
         oldPass = ((EditText) view.findViewById(R.id.oldPassword));
         memberID = ((EditText) view.findViewById(R.id.memberID));
         phoneNumber = ((EditText) view.findViewById(R.id.UserPhoneNumber));
         update = (Button) view.findViewById(R.id.update);
+
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 updateProfile(); ;
             }
         });
+
         return view ;
     }
 
@@ -56,6 +61,7 @@ public class UserUpdate extends Fragment {
             }
         }).show();
     }
+
     public void updateProfile() {
 
         //getting info from the view
