@@ -57,6 +57,8 @@ public class UserUpdate extends Fragment {
         }).show();
     }
     public void updateProfile() {
+
+        //getting info from the view
         String newPassword = newPass.getText().toString();
         String oldPassword = oldPass.getText().toString();
         String phoneNumber1 = phoneNumber.getText().toString();
