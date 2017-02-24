@@ -328,12 +328,13 @@ public class User{
                 call.cancel();
             }
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response)  {
 
                 int code = response.code();
-                String body = response.body().string();
+
 
                 try {
+                    String body = response.body().string();
                     JSONObject j = new JSONObject(body);
                     if(code/100 == 2)
                     {
@@ -343,7 +344,7 @@ public class User{
                     {
                         HTTP_RESPONSE.onFailure(code,j);
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     HTTP_RESPONSE.onFailure(500,null);
                 }
 
