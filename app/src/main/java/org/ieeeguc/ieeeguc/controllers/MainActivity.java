@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
@@ -23,6 +25,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
     public static User loggedInUser;
     public static String token;
+    private static Context context;
 
     private NavigationView navigationView;
 
@@ -30,6 +33,9 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // setting the context
+        context = this;
 
         // Sets the class to be a listener to the navigation menu.
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -56,7 +62,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
      * This method is called when the user clicks the log out item from the slide menu.
      * It logs the user out , redirect him to the login screen, and clears the sharePreferences.
      */
-    private void logout() {
+    public static void logout() {
 
         HTTPResponse logoutHTTPResponse = new HTTPResponse() {
             @Override
@@ -74,7 +80,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         loggedInUser.logout(token, logoutHTTPResponse);
 
         // Getting a reference to the SharedPreferences.
-        SharedPreferences sp = getSharedPreferences(getString(R.string.shared_preferences_name), Context.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences(context.getString(R.string.shared_preferences_name), Context.MODE_PRIVATE);
 
         // Clearing the SharedPreferences file.
         SharedPreferences.Editor editor = sp.edit();
@@ -86,9 +92,24 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         loggedInUser = null;
 
         // Navigating to the login screen.
-        Intent logOutIntent = new Intent(getApplicationContext(), LoginActivity.class);
-        startActivity(logOutIntent);
+        Intent logOutIntent = new Intent(context, LoginActivity.class);
+        logOutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(logOutIntent);
+        ((MainActivity) context).finish();
+    }
 
+    /**
+     * This method creates and displays a snack bar with a specific message and a dismiss button
+     * @param message The message of the snack bar
+     */
+    public static void createSnackBar(String message) {
+        Snackbar.make(((MainActivity) context).findViewById(R.id.mainContainer), message,
+                Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        }).show();
     }
 
     /**

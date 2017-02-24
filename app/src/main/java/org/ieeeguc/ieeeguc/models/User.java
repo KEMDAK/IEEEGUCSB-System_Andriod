@@ -449,4 +449,47 @@ public class User{
             }
         });
     }
+
+    /**
+     *  this method is called when the user wants alist of all the users from the data base
+     * @param {HttpResponce} HTTP_RESPONSE  (HTTP_RESPONSE Interface Instance)
+     */
+    public static void getAllUser(final HTTPResponse HTTP_RESPONSE){
+
+        OkHttpClient ok = new OkHttpClient();
+
+        Request request = new Request.Builder().url("http://ieeeguc.org/api/user").build();
+
+        ok.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                HTTP_RESPONSE.onFailure(-1, null);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response)  {
+
+                int code = response.code();
+
+                try {
+                    String body = response.body().string();
+                    JSONObject json = new JSONObject(body);
+                    if(code == 200)
+                    {
+                        HTTP_RESPONSE.onSuccess(code,json);
+                    }
+                    else
+                    {
+                        HTTP_RESPONSE.onFailure(code,json);
+                    }
+                } catch (Exception e) {
+                    HTTP_RESPONSE.onFailure(500,null);
+                }
+
+                response.close();
+
+            }
+        });
+    }
 }
