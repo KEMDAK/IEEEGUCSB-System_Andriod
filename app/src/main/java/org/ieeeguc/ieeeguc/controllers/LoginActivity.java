@@ -124,7 +124,9 @@ public class LoginActivity extends AppCompatActivity {
                         E.putString("user", new Gson().toJson(user));
                         E.commit();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+                        finish();
                     } catch (Exception e) {
                         Snackbar.make(findViewById(R.id.email_sign_in_button), getString(R.string.error_server_down),
                                 Snackbar.LENGTH_INDEFINITE).setAction("Ok", new OnClickListener() {
