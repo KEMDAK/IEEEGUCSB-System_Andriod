@@ -10,6 +10,7 @@
             android:id="@+id/log_out_item"
             android:checked="false"
             android:title="@string/drawer_item_2"/>
+
         <item android:title="Show User "
             android:id="@+id/user_show" />
     </group>
