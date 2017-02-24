@@ -36,7 +36,19 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
         // setting the context
         context = this;
+/*
+        loggedInUser.addUser(token, "Member", "andrew.kamal@student.guc.edu.eg", "Andrew123", "Andrew", "Akram", "1997-3-9", "01200777154", "Male", "12321", new HTTPResponse() {
+            @Override
+            public void onSuccess(int statusCode, JSONObject body) {
 
+            }
+
+            @Override
+            public void onFailure(int statusCode, JSONObject body) {
+
+            }
+        });
+        */
         // Sets the class to be a listener to the navigation menu.
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);

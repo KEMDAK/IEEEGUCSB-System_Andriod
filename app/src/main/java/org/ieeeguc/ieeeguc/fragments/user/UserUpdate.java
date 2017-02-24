@@ -2,7 +2,6 @@ package org.ieeeguc.ieeeguc.fragments.user;
 
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
 import org.ieeeguc.ieeeguc.controllers.MainActivity;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -52,16 +52,6 @@ public class UserUpdate extends Fragment {
         return view ;
     }
 
-    public void notifyUser(String message){
-        Snackbar.make(getActivity().findViewById(android.R.id.content), message,
-                Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        }).show();
-    }
-
     public void updateProfile() {
 
         //getting info from the view
@@ -70,27 +60,40 @@ public class UserUpdate extends Fragment {
         String phoneNumber1 = phoneNumber.getText().toString();
         String memberShipID = memberID.getText().toString();
 
-        if (!(oldPassword.isEmpty())) {
+        if (!(oldPassword.isEmpty()) && phoneNumber1.matches("/^\\+?\\d+-?\\d+-?\\d+$/i")) {
             MainActivity.loggedInUser.editProfile(MainActivity.token, oldPassword, newPassword, memberShipID, phoneNumber1, new HTTPResponse() {
                 public void onSuccess(int statusCode, JSONObject body) {
-                    notifyUser("profile updated Successfully");
+                    MainActivity.createSnackBar("profile updated Successfully");
                 }
 
                 public void onFailure(int statusCode, JSONObject body) {
+                    if(statusCode == 400){
+                        try {
+                            MainActivity.createSnackBar(body.getString("message"));
+                        } catch (JSONException e) {
+                            MainActivity.createSnackBar("Internal Server Error");
+                        }
+                    }
+                    if(statusCode==401){
+                        MainActivity.logout();
+                    }
                     if(statusCode == 403) {
-                        notifyUser("Old Password not Correct");
+                        MainActivity.createSnackBar("Old Password not Correct");
                     }
 
                     else if(statusCode == 500) {
-                       notifyUser(getString(R.string.error_server_down));
+                        MainActivity.createSnackBar(getString(R.string.error_server_down));
                     }
                     else if(statusCode == -1) {
-                        notifyUser(getString(R.string.error_connection));
+                        MainActivity.createSnackBar(getString(R.string.error_connection));
                     }
                 }
             });
-        } else {
-            notifyUser("Old Password is Required");
+        } else if(oldPassword.isEmpty()){
+            MainActivity.createSnackBar("Old Password is Required");
+        }
+        else{
+            MainActivity.createSnackBar("Incorrect phone_Number");
         }
     }
 }

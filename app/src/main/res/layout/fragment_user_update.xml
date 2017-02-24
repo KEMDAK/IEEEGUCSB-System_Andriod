@@ -24,7 +24,7 @@
             android:id="@+id/editText3" />
 
         <EditText
-            android:text="old password "
+            android:hint="Old Password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/editText3"
@@ -34,7 +34,7 @@
             android:id="@+id/oldPassword" />
 
         <EditText
-            android:text="new Password"
+            android:hint="new Password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/oldPassword"
