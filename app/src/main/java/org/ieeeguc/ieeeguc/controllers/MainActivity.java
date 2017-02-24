@@ -12,11 +12,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.gson.Gson;
-
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
-import org.ieeeguc.ieeeguc.fragments.user.UserIndex;
+import org.ieeeguc.ieeeguc.fragments.user.UserUpdate;
 import org.ieeeguc.ieeeguc.models.User;
 import org.json.JSONObject;
 
@@ -43,6 +41,8 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        /** testing starts here **/
+        /*
         // Fragment usage illustration
         // creating the fragment instance
         UserIndex userIndex = new UserIndex();
@@ -56,8 +56,8 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
         // adding the fragment to the mainContainer
         getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, userIndex).commit();
+*/
     }
-
     /**
      * This method is called when the user clicks the log out item from the slide menu.
      * It logs the user out , redirect him to the login screen, and clears the sharePreferences.
@@ -72,7 +72,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
             @Override
             public void onFailure(int statusCode, JSONObject body) {
-                
+
             }
         };
 
@@ -131,6 +131,10 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
             // When the logout navigation item is clicked logs out .
             logout();
+        }
+        else if(id == R.id.User_Update){
+            UserUpdate updateFragment = new UserUpdate();
+            getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, updateFragment).commit();
         }
 
         // Closes the drawer menu after the item is selected.
