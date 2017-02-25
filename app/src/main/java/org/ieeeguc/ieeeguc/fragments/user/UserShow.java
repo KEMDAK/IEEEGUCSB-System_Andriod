@@ -4,6 +4,7 @@ package org.ieeeguc.ieeeguc.fragments.user;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,17 @@ import static org.ieeeguc.ieeeguc.models.User.getUser;
  */
 public class UserShow extends Fragment {
 
-    private User user;
+    int id=0;
+    String type="";
+    String first_name="";
+    String last_name="";
+    String email="";
+    String gender="";
+    String phone_number="";
+    String birthdate="";
+    int IEEE_membership_ID=0;
+    //JSONObject settings ;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,43 +49,43 @@ public class UserShow extends Fragment {
 
 
         final View view = inflater.inflate(R.layout.fragment_user_show, container, false);
-        final int id = new Gson().fromJson(getArguments().getString("user_id"),Integer.class);
-        String token  = new Gson().fromJson(getArguments().getString("token"),String.class);
-        getUser(token, id, new HTTPResponse() {
+
+
+      //  final int id = new Gson().fromJson(getArguments().getString("user_id"),Integer.class);
+       // String token  = new Gson().fromJson(getArguments().getString("token"),String.class);
+        MainActivity.loggedInUser.getUser(MainActivity.token,MainActivity.loggedInUser.getId(), new HTTPResponse() {
             @Override
             public void onSuccess(int statusCode, JSONObject body) {
                 try {
                     JSONObject j = body.getJSONObject("result");
-                    int id = (int) j.getInt("id");
-                    User.Type type = (User.Type) j.get("type");
-                    String first_name  = j.getString("first_name");
-                    String last_name = j.getString("last_name");
-                    String email = j.getString("email");
-                    User.Gender gender = (User.Gender) j.get("gender");
-                    String phone_number = j.getString("phone_number");
-                    Date birthdate = (Date) j.get("birthdate");
-                    int IEEE_membership_ID = j.getInt("IEEE_membership_ID");
-                    JSONObject settings = j.getJSONObject("setting");
+                     id = j.getInt("id");
+                     type = j.getString("type");
+                     first_name  = j.getString("first_name");
+                     last_name = j.getString("last_name");
+                     email = j.getString("email");
+                     gender = j.getString("gender");
+                     phone_number = j.getString("phone_number");
+                     birthdate = j.getString("birthdate");
+                     IEEE_membership_ID = j.getInt("IEEE_membership_ID");
+                     //settings = j.getJSONObject("setting");
 
-                    ((TextView) view.findViewById(R.id.name)).setText(first_name+" "+last_name);
-                    ((TextView) view.findViewById(R.id.email)).setText(email);
-                    ((TextView) view.findViewById(R.id.id)).setText(id+"");
-                    ((TextView) view.findViewById(R.id.ieeemsh_id)).setText(IEEE_membership_ID+"");
-                    ((TextView) view.findViewById(R.id.phone)).setText(phone_number);
-                    ((TextView) view.findViewById(R.id.type)).setText(type.toString());
-                     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-                    ((TextView) view.findViewById(R.id.bdate)).setText((sdf.format(birthdate)));
-                    ((TextView) view.findViewById(R.id.gender)).setText(gender.toString());
+
+
 
                 } catch (Exception e) {
-                    Snackbar.make(findViewById(R.id.email_sign_in_button), getString(R.string.error_server_down),
-                            Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
 
-                        }
-                    }).show();
+                    MainActivity.createSnackBar("");
                 }
+
+                ((TextView) view.findViewById(R.id.name)).setText(first_name+" "+last_name);
+                ((TextView) view.findViewById(R.id.email)).setText(email);
+                ((TextView) view.findViewById(R.id.id)).setText(id+"");
+                ((TextView) view.findViewById(R.id.ieeemsh_id)).setText(IEEE_membership_ID+"");
+                ((TextView) view.findViewById(R.id.phone)).setText(phone_number);
+                ((TextView) view.findViewById(R.id.type)).setText(type);
+
+                ((TextView) view.findViewById(R.id.bdate)).setText(birthdate);
+                ((TextView) view.findViewById(R.id.gender)).setText(gender);
             }
 
             @Override
@@ -85,19 +96,14 @@ public class UserShow extends Fragment {
                 }
                 else if(statusCode == 400)
                 {
-
+                    //do
+                    MainActivity.createSnackBar("");
                 }else if(statusCode == 500)
                 {
-
+                    MainActivity.createSnackBar(getString(R.string.error_server_down));
                 }else if(statusCode == -1)
                 {
-                    Snackbar.make(findViewById(R.id.email_sign_in_button), getString(R.string.error_connection),
-                            Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                        }
-                    }).show();
+                    MainActivity.createSnackBar(getString(R.string.error_connection));
 
                 }
 
