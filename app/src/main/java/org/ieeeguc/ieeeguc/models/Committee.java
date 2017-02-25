@@ -18,10 +18,6 @@ import okhttp3.Response;
 
 import static org.ieeeguc.ieeeguc.models.User.CONTENT_TYPE;
 
-/**
- * Created by abdelrahmen on 16/02/17.
- */
-
 public class Committee {
 
     private String name;
@@ -131,34 +127,24 @@ public class Committee {
 
                     int code = response.code();
                     String body = null;
-                    if(code/100 == 2)
-                    {
-                        try {
-                            JSONObject j = new JSONObject(body);
+                    try {
+                        JSONObject j = new JSONObject(body);
+                        if(code/100 == 2)
+                        {
                             HTTP_RESPONSE.onSuccess(code,j);
-
-                        } catch (Exception e) {
-                            HTTP_RESPONSE.onFailure(500,null);
                         }
-
-                    }
-                    else
-                    {
-                        try {
-                            JSONObject j = new JSONObject(body);
+                        else
+                        {
                             HTTP_RESPONSE.onSuccess(code,j);
-
-                        } catch (Exception e) {
-                            HTTP_RESPONSE.onFailure(500,null);
                         }
+                    } catch (Exception e) {
+                        HTTP_RESPONSE.onFailure(500,null);
                     }
-
 
                     response.close();
                 }
             });
         } catch (JSONException e) {
-
             HTTP_RESPONSE.onFailure(500,null);
         }
 
