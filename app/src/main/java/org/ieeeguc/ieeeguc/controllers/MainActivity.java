@@ -57,7 +57,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
      * This method is called when the user clicks the log out item from the slide menu.
      * It logs the user out , redirect him to the login screen, and clears the sharePreferences.
      */
-    private void logout() {
+    public static void logout() {
 
         HTTPResponse logoutHTTPResponse = new HTTPResponse() {
             @Override
@@ -112,7 +112,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             // When the logout navigation item is clicked logs out .
             logout();
         }
-        else if(id==R.id.user_show){
+        else if(id==R.id.user_show_item){
             //When the Show user navigation item is clicked show user info
             UserShow userShow = new UserShow();
 
