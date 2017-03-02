@@ -14,7 +14,6 @@ import android.view.View;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
-import org.ieeeguc.ieeeguc.fragments.user.UserIndex;
 import org.ieeeguc.ieeeguc.fragments.user.UserShow;
 import org.ieeeguc.ieeeguc.fragments.user.UserUpdate;
 import org.ieeeguc.ieeeguc.models.User;
@@ -133,12 +132,8 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
             // When the logout navigation item is clicked logs out .
             logout();
-<<<<<<< HEAD
         }
         else if(id==R.id.user_show_item){
-=======
-        } else if(id==R.id.user_show) {
->>>>>>> origin/Reham
             //When the Show user navigation item is clicked show user info
             UserShow userShow = new UserShow();
 
