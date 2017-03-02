@@ -31,8 +31,8 @@ public class UserShow extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_user_show, container, false);
 
 
-      //  final int id = new Gson().fromJson(getArguments().getString("user_id"),Integer.class);
-       // String token  = new Gson().fromJson(getArguments().getString("token"),String.class);
+        //  final int id = new Gson().fromJson(getArguments().getString("user_id"),Integer.class);
+        // String token  = new Gson().fromJson(getArguments().getString("token"),String.class);
         MainActivity.loggedInUser.getUser(MainActivity.token,MainActivity.loggedInUser.getId(), new HTTPResponse() {
             @Override
             public void onSuccess(int statusCode, JSONObject body) {
@@ -47,7 +47,7 @@ public class UserShow extends Fragment {
                     final String phone_number= j.getString("phone_number");
                     final String birthdate= j.getString("birthdate");
                     final int IEEE_membership_ID = j.getInt("IEEE_membership_ID");
-                     //settings = j.getJSONObject("setting");
+
                     Handler refresh = new Handler(Looper.getMainLooper());
                     refresh.post(new Runnable() {
                         public void run()
@@ -64,8 +64,7 @@ public class UserShow extends Fragment {
                     });
 
                 } catch (Exception e) {
-
-                    MainActivity.createSnackBar("Json error");
+                    MainActivity.createSnackBar(getString(R.string.error_server_down));
                 }
             }
 

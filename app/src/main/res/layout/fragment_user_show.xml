@@ -75,26 +75,6 @@
             android:text="TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/phone"
-            android:layout_alignLeft="@+id/phone"
-            android:layout_alignStart="@+id/phone"
-            android:layout_marginTop="41dp"
-            android:id="@+id/committee_id" />
-
-        <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/committee_id"
-            android:layout_alignLeft="@+id/committee_id"
-            android:layout_alignStart="@+id/committee_id"
-            android:layout_marginTop="37dp"
-            android:id="@+id/committee_name" />
-
-        <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignLeft="@+id/type"
             android:layout_alignStart="@+id/type"
