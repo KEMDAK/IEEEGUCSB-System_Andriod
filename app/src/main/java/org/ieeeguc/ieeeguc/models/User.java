@@ -253,7 +253,7 @@ public class User{
 
         OkHttpClient client= new OkHttpClient();
         Request request=new Request.Builder()
-                .url("http://ieeeguc.org/api/User/"+id)
+                .url("http://ieeeguc.org/api/user/"+id)
                 .addHeader("Authorization",token)
                 .addHeader("user_agent","Android")
                 .build();

@@ -14,8 +14,8 @@ import android.view.View;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
-import org.ieeeguc.ieeeguc.fragments.user.UserIndex;
 import org.ieeeguc.ieeeguc.fragments.user.UserShow;
+import org.ieeeguc.ieeeguc.fragments.user.UserStore;
 import org.ieeeguc.ieeeguc.fragments.user.UserUpdate;
 import org.ieeeguc.ieeeguc.models.User;
 import org.json.JSONObject;
@@ -133,26 +133,22 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
             // When the logout navigation item is clicked logs out .
             logout();
-<<<<<<< HEAD
-        }
-        else if(id==R.id.user_show_item){
-=======
+
         } else if(id==R.id.user_show) {
->>>>>>> origin/Reham
             //When the Show user navigation item is clicked show user info
             UserShow userShow = new UserShow();
 
-            // adding the variables to the fragment
-
-          //  Bundle bundle = new Bundle();
-          //  bundle.putString("user_id", new Gson().toJson(loggedInUser.getId()));
-          //  bundle.putString("token", new Gson().toJson(token));
-           // userShow.setArguments(bundle);
+            // adding the fragment to the mainContainer
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, userShow).commit();
+        }
+        else if(id==R.id.user_Creation) {
+            //When the Show user navigation item is clicked show user info
+            UserStore userCreation = new UserStore();
 
             // adding the fragment to the mainContainer
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, userShow).commit();
-        } else if(id == R.id.User_Update) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, userCreation).commit();
+        }
+        else if(id == R.id.User_Update) {
             UserUpdate updateFragment = new UserUpdate();
             getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, updateFragment).commit();
         }
