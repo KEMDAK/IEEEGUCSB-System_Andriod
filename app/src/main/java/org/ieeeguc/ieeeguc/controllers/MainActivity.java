@@ -18,7 +18,18 @@ import org.ieeeguc.ieeeguc.fragments.user.UserShow;
 import org.ieeeguc.ieeeguc.fragments.user.UserStore;
 import org.ieeeguc.ieeeguc.fragments.user.UserUpdate;
 import org.ieeeguc.ieeeguc.models.User;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.Arrays;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 /**
  * The main screen that offers the different sections of the application.
@@ -42,28 +53,84 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         // Sets the class to be a listener to the navigation menu.
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
+        addMeeting(token, "2017-03-23", "2017-03-25", null, new String[0], null, new int[0], new HTTPResponse() {
+            @Override
+            public void onSuccess(int statusCode, JSONObject body) {
+                MainActivity.createSnackBar("Meeting is created Successfully");
+            }
 
+            @Override
+            public void onFailure(int statusCode, JSONObject body) {
+
+                MainActivity.createSnackBar(Integer.toString(statusCode));
+            }
+        });
         /** testing starts here **/
         /*
         // Fragment usage illustration
         // creating the fragment instance
         UserIndex userIndex = new UserIndex();
 
-        // adding the needed variables to it
-        User[] users = new User[1];
-        users[0] = loggedInUser;
-        Bundle bundle = new Bundle();
-        bundle.putString("users", new Gson().toJson(users));
-        userIndex.setArguments(bundle);
-
         // adding the fragment to the mainContainer
         getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, userIndex).commit();
 */
+
     }
     /**
      * This method is called when the user clicks the log out item from the slide menu.
      * It logs the user out , redirect him to the login screen, and clears the sharePreferences.
      */
+
+    public static void addMeeting(String userToken,String startDate ,String endDate, String location, String[] goals,String description,int [] attendees , final HTTPResponse HTTP_RESPONSE){
+
+         final MediaType CONTENT_TYPE = MediaType.parse("application/json; charset=utf-8");
+
+        OkHttpClient client= new OkHttpClient();
+        JSONObject jsonBody = new JSONObject();
+        try{
+            jsonBody.put("start_date",startDate);
+            jsonBody.put("end_date",endDate);
+            jsonBody.put("location",location);
+            jsonBody.put("goals", Arrays.toString(goals));
+            jsonBody.put("description",description);
+            jsonBody.put("attendees",Arrays.toString(attendees));
+
+
+            RequestBody body = RequestBody.create(CONTENT_TYPE, jsonBody.toString());
+            Request request=new Request.Builder()
+                    .url("http://ieeeguc.org/api/meeting")
+                    .addHeader("Authorization",userToken)
+                    .addHeader("user_agent","Android")
+                    .post(body)
+                    .build();
+            client.newCall(request).enqueue(new Callback() {
+                public void onFailure(Call call, IOException e) {
+                    HTTP_RESPONSE.onFailure(-1,null);
+                    call.cancel();
+                }
+                public void onResponse(Call call, okhttp3.Response response)  {
+                    try {
+                        String responseData = response.body().string();
+                        JSONObject json = new JSONObject(responseData);
+                        int x = response.code();
+                        String y = Integer.toString(x);
+                        if(y.charAt(0)== '2'){
+                            HTTP_RESPONSE.onSuccess(x,json);
+                        }
+                        else{
+                            HTTP_RESPONSE.onFailure(x,json);
+                        }
+                    } catch (Exception e) {
+                        HTTP_RESPONSE.onFailure(500,null);
+                    }
+                    response.close();
+                }
+            });
+        }catch(JSONException e){
+            HTTP_RESPONSE.onFailure(500,null);
+        }
+    }
+
     public static void logout() {
 
         HTTPResponse logoutHTTPResponse = new HTTPResponse() {
