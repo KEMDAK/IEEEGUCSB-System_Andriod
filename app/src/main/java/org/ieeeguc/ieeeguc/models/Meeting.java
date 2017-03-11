@@ -29,7 +29,6 @@ public class Meeting {
                    User supervisor, Date created_at, Date updated_at) {
 
         this.id = id;
-
         this.start_date = start_date;
         this.end_Date = end_Date;
         this.goals = goals;
