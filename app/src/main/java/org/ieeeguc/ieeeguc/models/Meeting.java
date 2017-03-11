@@ -1,5 +1,6 @@
 package org.ieeeguc.ieeeguc.models;
 
+import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -11,16 +12,16 @@ public class Meeting {
 
     private Date start_date;
     private Date end_Date;
-    private String goals;
-    private String duration;
+    private JSONObject goals;
+    private int duration;
     private String location;
     private String description;
     private int evaluation;
     private ArrayList<Attendee> attendees;
     private User supervisor;
 
-    public Meeting(Date start_date, Date end_Date, String goals,
-                   String duration, String location, String description,
+    public Meeting(Date start_date, Date end_Date, JSONObject goals,
+                   int duration, String location, String description,
                    int evaluation, ArrayList<Attendee> attendees, User supervisor) {
 
         this.start_date = start_date;
@@ -35,6 +36,11 @@ public class Meeting {
 
     }
 
+    public static void getCommittee(){
+
+
+    }
+
     public Date getStart_date() {
         return start_date;
     }
@@ -43,11 +49,11 @@ public class Meeting {
         return end_Date;
     }
 
-    public String getGoals() {
+    public JSONObject getGoals() {
         return goals;
     }
 
-    public String getDuration() {
+    public int getDuration() {
         return duration;
     }
 
@@ -71,7 +77,7 @@ public class Meeting {
         return supervisor;
     }
 
-    private static class Attendee{
+    public static class Attendee{
 
         private User user;
         private String review;
