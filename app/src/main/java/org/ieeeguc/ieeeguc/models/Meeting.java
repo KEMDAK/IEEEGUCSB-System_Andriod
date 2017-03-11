@@ -19,10 +19,13 @@ public class Meeting {
     private int evaluation;
     private ArrayList<Attendee> attendees;
     private User supervisor;
+    private Date created_at;
+    private Date updated_at;
 
     public Meeting(Date start_date, Date end_Date, JSONObject goals,
                    int duration, String location, String description,
-                   int evaluation, ArrayList<Attendee> attendees, User supervisor) {
+                   int evaluation, ArrayList<Attendee> attendees,
+                   User supervisor, Date created_at, Date updated_at) {
 
         this.start_date = start_date;
         this.end_Date = end_Date;
@@ -33,10 +36,8 @@ public class Meeting {
         this.evaluation = evaluation;
         this.attendees = attendees;
         this.supervisor = supervisor;
-
-    }
-
-    public static void getCommittee(){
+        this.created_at = created_at;
+        this.updated_at = updated_at;
 
 
     }
@@ -76,6 +77,15 @@ public class Meeting {
     public User getSupervisor() {
         return supervisor;
     }
+
+    public Date getCreated_at() {
+        return created_at;
+    }
+
+    public Date getUpdated_at() {
+        return updated_at;
+    }
+
 
     public static class Attendee{
 
