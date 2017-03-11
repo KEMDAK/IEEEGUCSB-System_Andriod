@@ -4,8 +4,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 
+import okhttp3.Request;
+
 public class Meeting {
 
+    private int id;
     private Date start_date;
     private Date end_Date;
     private JSONObject goals;
@@ -18,11 +21,14 @@ public class Meeting {
     private Date created_at;
     private Date updated_at;
 
-    public Meeting(Date start_date, Date end_Date, JSONObject goals,
+
+
+    public Meeting(int id, Date start_date, Date end_Date, JSONObject goals,
                    int duration, String location, String description,
                    int evaluation, ArrayList<Attendee> attendees,
                    User supervisor, Date created_at, Date updated_at) {
 
+        this.id = id;
         this.start_date = start_date;
         this.end_Date = end_Date;
         this.goals = goals;
@@ -80,6 +86,10 @@ public class Meeting {
 
     public Date getUpdated_at() {
         return updated_at;
+    }
+
+    public int getId() {
+        return id;
     }
 
 
