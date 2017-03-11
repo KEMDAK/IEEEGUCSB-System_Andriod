@@ -4,10 +4,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 
-/**
- * Created by abdelrahmen on 11/03/17.
- */
-
 public class Meeting {
 
     private Date start_date;
