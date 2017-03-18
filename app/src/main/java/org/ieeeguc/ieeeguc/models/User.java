@@ -21,7 +21,7 @@ import okhttp3.Response;
  */
 public class User{
 
-    public static final MediaType CONTENT_TYPE = MediaType.parse("application/json; charset=utf-8");
+    private static final MediaType CONTENT_TYPE = MediaType.parse("application/json; charset=utf-8");
 
     public static enum Type { ADMIN, HIGH_BOARD, MEMBER, UPPER_BOARD }
     public static enum Gender { MALE, FEMALE }
