@@ -1,10 +1,9 @@
 package org.ieeeguc.ieeeguc.models;
 
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Date;
-
-import okhttp3.Request;
 
 public class Meeting {
 

@@ -1,9 +1,6 @@
 package org.ieeeguc.ieeeguc.models;
 
-import android.util.Log;
-
 import org.ieeeguc.ieeeguc.HTTPResponse;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -92,5 +89,48 @@ public class Committee {
             }
         });
 
+    }
+
+    /**
+     * This function gets the information of a specific committee from the database.
+     * @param {String} token [token of the user]
+     * @param {int} id [id of the committee]
+     * @param {HTTPResponse} HTTP_RESPONSE [HTTPResponse interface instance]
+     * @return {void}
+     */
+    public static void getCommittee(int id, final HTTPResponse HTTP_RESPONSE){
+
+        OkHttpClient client= new OkHttpClient();
+        Request request=new Request.Builder()
+                .url("http://ieeeguc.org/api/committee/" + id)
+                .addHeader("user_agent", "Android")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            public void onFailure(Call call, IOException e) {
+                HTTP_RESPONSE.onFailure(-1, null);
+                call.cancel();
+            }
+
+            public void onResponse(Call call, okhttp3.Response response) {
+                int statusCode = response.code();
+
+                try {
+                    String body = response.body().string();
+                    JSONObject bodyJSON = new JSONObject(body);
+
+                    if (statusCode / 100 == 2) {
+                        HTTP_RESPONSE.onSuccess(statusCode, bodyJSON);
+                    } else {
+                        HTTP_RESPONSE.onFailure(statusCode, bodyJSON);
+                    }
+                } catch (Exception e){
+                    HTTP_RESPONSE.onFailure(500, null);
+                }
+
+                response.close();
+            }
+        });
     }
 }

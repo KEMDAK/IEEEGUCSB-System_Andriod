@@ -185,6 +185,7 @@ public class User{
         }
 
     }
+
     /**
      * this method is called when a user of Type at least Upper Board wants to create a user in the Database
      * @param {String} userToken [token of the requesting user]
@@ -192,7 +193,6 @@ public class User{
      * @param {HTTPResponse} HTTP_RESPONSE [HTTPResponse interface instance]
      * @return {void}
      */
-
     public static void addUser(String userToken,String type ,String email ,String password , String firstName ,String lastName ,String birthDate, String phoneNumber,
     String gender,String id , final HTTPResponse HTTP_RESPONSE){
         OkHttpClient client= new OkHttpClient();
@@ -242,6 +242,7 @@ public class User{
             HTTP_RESPONSE.onFailure(500,null);
         }
     }
+
     /**
      * this method is called when the user to get information about some other user , the returned body will differ according to type of requested user
      * @param {String} token [token of the user]
