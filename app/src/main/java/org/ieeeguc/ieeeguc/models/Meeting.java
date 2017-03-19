@@ -123,7 +123,7 @@ public class Meeting {
         try{
             OkHttpClient client = new OkHttpClient();
             Request request=new Request.Builder()
-                    .url("http://ieeeguc.org/api/meeting/"+id)
+                    .url("http://ieeeguc.org/api/meeting/{"+id+"}")
                     .addHeader("Authorization", accessToken)
                     .header("user_agent","Android")
                     .build();
