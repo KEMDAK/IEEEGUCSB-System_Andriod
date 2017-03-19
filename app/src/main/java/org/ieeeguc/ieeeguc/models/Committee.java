@@ -1,24 +1,24 @@
 package org.ieeeguc.ieeeguc.models;
 
-import android.util.Log;
-
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static org.ieeeguc.ieeeguc.models.User.CONTENT_TYPE;
-
 public class Committee {
+
+    private static final MediaType CONTENT_TYPE = MediaType.parse("application/json; charset=utf-8");
 
     private String name;
     private String description;
@@ -94,6 +94,7 @@ public class Committee {
     }
 
     /**
+<<<<<<< HEAD
      * This Method is used to create a new committee
      * @param {string} token [token of the logged in user]
      * @param {string} name [name of the committee]
@@ -102,17 +103,17 @@ public class Committee {
      * @return {void}
      */
 
-    public static void addCommittee(String token,String name,String description,final HTTPResponse HTTP_RESPONSE){
+    public static void addCommittee(String token,String name,String description,final HTTPResponse HTTP_RESPONSE) {
         OkHttpClient client = new OkHttpClient();
         JSONObject j = new JSONObject();
         try {
             j.put("name", name);
-            j.put("description",description);
-            RequestBody body = RequestBody.create(CONTENT_TYPE,j.toString());
+            j.put("description", description);
+            RequestBody body = RequestBody.create(CONTENT_TYPE, j.toString());
             Request request = new Request.Builder()
                     .url("http://ieeeguc.org/api/committee")
-                    .header("user_agent","Android")
-                    .header("Authorization",token)
+                    .header("user_agent", "Android")
+                    .header("Authorization", token)
                     .post(body)
                     .build();
             client.newCall(request).enqueue(new Callback() {
@@ -123,30 +124,118 @@ public class Committee {
                 }
 
                 @Override
-                public void onResponse(Call call, Response response){
+                public void onResponse(Call call, Response response) {
 
                     int code = response.code();
                     String body = null;
                     try {
                         JSONObject j = new JSONObject(body);
-                        if(code/100 == 2)
-                        {
-                            HTTP_RESPONSE.onSuccess(code,j);
-                        }
-                        else
-                        {
-                            HTTP_RESPONSE.onSuccess(code,j);
+                        if (code / 100 == 2) {
+                            HTTP_RESPONSE.onSuccess(code, j);
+                        } else {
+                            HTTP_RESPONSE.onSuccess(code, j);
                         }
                     } catch (Exception e) {
-                        HTTP_RESPONSE.onFailure(500,null);
+                        HTTP_RESPONSE.onFailure(500, null);
                     }
 
                     response.close();
                 }
             });
         } catch (JSONException e) {
-            HTTP_RESPONSE.onFailure(500,null);
+            HTTP_RESPONSE.onFailure(500, null);
         }
+    }
+    /*
+     * This function gets the information of a specific committee from the database.
+     * @param {String} token [token of the user]
+     * @param {int} id [id of the committee]
+     * @param {HTTPResponse} HTTP_RESPONSE [HTTPResponse interface instance]
+     * @return {void}
+     */
+    public static void getCommittee(int id, final HTTPResponse HTTP_RESPONSE){
 
+        OkHttpClient client= new OkHttpClient();
+        Request request=new Request.Builder()
+                .url("http://ieeeguc.org/api/committee/" + id)
+                .addHeader("user_agent", "Android")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            public void onFailure(Call call, IOException e) {
+                HTTP_RESPONSE.onFailure(-1, null);
+                call.cancel();
+            }
+
+            public void onResponse(Call call, okhttp3.Response response) {
+                int statusCode = response.code();
+
+                try {
+                    String body = response.body().string();
+                    JSONObject bodyJSON = new JSONObject(body);
+
+                    if (statusCode / 100 == 2) {
+                        HTTP_RESPONSE.onSuccess(statusCode, bodyJSON);
+                    } else {
+                        HTTP_RESPONSE.onFailure(statusCode, bodyJSON);
+                    }
+                } catch (Exception e){
+                    HTTP_RESPONSE.onFailure(500, null);
+                }
+
+                response.close();
+            }
+        });
+    }
+
+    public void edit(String token, final String name, final String description, final HTTPResponse HTTP_RESPONSE) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("name", name);
+        map.put("description", description);
+
+        final Committee committee = this;
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().put(RequestBody.create(CONTENT_TYPE,
+                new JSONObject(map).toString()))
+                .addHeader("Authorization", token)
+                .addHeader("user_agent", "Android")
+                .url("http://ieeeguc.org/api/committee/" + id).build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                /* connection error */
+                HTTP_RESPONSE.onFailure(-1, null);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response){
+                /* successfull API call */
+                int statusCode = response.code();
+
+                try {
+                    String body = response.body().string();
+                    JSONObject bodyJSON = new JSONObject(body);
+
+                    if (statusCode / 100 == 2) {
+                        /* updating the local data */
+                        committee.name = name;
+                        committee.description = description;
+
+                        HTTP_RESPONSE.onSuccess(statusCode, bodyJSON);
+                    }
+                    else {
+                        HTTP_RESPONSE.onFailure(statusCode, bodyJSON);
+                    }
+                } catch (Exception e) {
+                    HTTP_RESPONSE.onFailure(500, null);
+                }
+
+                response.close();
+            }
+        });
     }
 }

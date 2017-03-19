@@ -53,6 +53,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 */
 
     }
+
     /**
      * This method is called when the user clicks the log out item from the slide menu.
      * It logs the user out , redirect him to the login screen, and clears the sharePreferences.
