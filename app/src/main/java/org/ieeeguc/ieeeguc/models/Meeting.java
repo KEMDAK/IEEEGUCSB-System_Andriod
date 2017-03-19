@@ -1,12 +1,25 @@
 package org.ieeeguc.ieeeguc.models;
 
+import android.media.session.MediaSession;
+
+import org.ieeeguc.ieeeguc.HTTPResponse;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Meeting {
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
+public class Meeting {
+    private static final MediaType CONTENT_TYPE = MediaType.parse("application/json; charset=utf-8");
     private int id;
     private Date start_date;
     private Date end_Date;
@@ -103,6 +116,49 @@ public class Meeting {
             this.review = review;
             this.rating = rating;
         }
+    }
+    public static void delete(int id ,String accessToken,final HTTPResponse HTTP_RESPONSE){
+
+
+        try{
+            OkHttpClient client = new OkHttpClient();
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("id",id);
+            RequestBody body = RequestBody.create(CONTENT_TYPE, jsonBody.toString());
+            Request request=new Request.Builder()
+                    .url("http://ieeeguc.org/api/meeting/"+id)
+                    .addHeader("Authorization", accessToken)
+                    .header("user_agent","Android")
+                    .post(body)
+                    .build();
+            client.newCall(request).enqueue(new Callback() {
+                public void onFailure(Call call, IOException e) {
+                    HTTP_RESPONSE.onFailure(-1,null);
+                    call.cancel();
+                }
+                @Override
+                public void onResponse(Call call, Response response) {
+                    try {
+                        String responseData = response.body().string();
+                        JSONObject json = new JSONObject(responseData);
+                        int response_code = response.code();
+                        String y = Integer.toString(response_code);
+                        if(y.charAt(0)== '2'){
+                            HTTP_RESPONSE.onSuccess(response_code,json);
+                        }
+                        else{
+                            HTTP_RESPONSE.onFailure(response_code,json);
+                        }
+                    } catch (Exception e) {
+                        HTTP_RESPONSE.onFailure(500,null);
+                    }
+                    response.close();
+                }
+            });
+        }catch(JSONException e){
+            HTTP_RESPONSE.onFailure(-1,null);
+        }
+
     }
 }
 

@@ -1,6 +1,7 @@
 package org.ieeeguc.ieeeguc.models;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -99,45 +100,7 @@ public class Committee {
 
     }
 
-    public void edit(int id , String token , String name , String description , final HTTPResponse HTTP_RESPONSE){
-        OkHttpClient client= new OkHttpClient();
-        JSONObject jsonBody = new JSONObject();
-        try{
-            jsonBody.put("name",name);
-            jsonBody.put("description",description);
-            RequestBody body = RequestBody.create(CONTENT_TYPE, jsonBody.toString());
-        Request request=new Request.Builder()
-                .url("http://ieeeguc.org/api/committee/"+id)
-                .addHeader("Authorization",token)
-                .addHeader("user_agent","Android")
-                .post(body)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-                                            public void onFailure(Call call, IOException e) {
-                                                HTTP_RESPONSE.onFailure(-1, null);
-                                                call.cancel();
-                                            }
 
-                                            public void onResponse(Call call, okhttp3.Response response) throws IOException {
-                                                int code = response.code();
-                                                String c = code + "";
-                                                String body = response.body().string();
-                                                try {
-                                                    JSONObject rr = new JSONObject(body);
-                                                    if (c.charAt(0) == '2') {
-                                                        HTTP_RESPONSE.onSuccess(code, rr);
-
-                                                    } else {
-                                                        HTTP_RESPONSE.onFailure(code, rr);
-                                                    }
-                                                } catch (JSONException e) {
-                                                    HTTP_RESPONSE.onFailure(code, null);
-
-                                                }
-                                            }
-                                        }
-        }catch (JSONException e){
-            HTTP_RESPONSE.onFailure(code,null);}}
     /**
      * This function gets the information of a specific committee from the database.
      * @param {String} token [token of the user]
@@ -231,9 +194,8 @@ public class Committee {
             }
         });
 
-    }catch (JSONException e){
-            HTTP_RESPONSE.onFailure(-1,null);
-        }
+    }
+
 
     }
 
