@@ -20,7 +20,7 @@ import okhttp3.Response;
 
 public class Meeting {
     private static final MediaType CONTENT_TYPE = MediaType.parse("application/json; charset=utf-8");
-    private int id;
+    private  int id;
     private Date start_date;
     private Date end_Date;
     private JSONObject goals;
@@ -117,13 +117,12 @@ public class Meeting {
             this.rating = rating;
         }
     }
-    public static void delete(int id ,String accessToken,final HTTPResponse HTTP_RESPONSE){
-
-
+    public void delete(String accessToken, final HTTPResponse HTTP_RESPONSE){
 
             OkHttpClient client = new OkHttpClient();
+        final Meeting meeting = this;
             Request request=new Request.Builder()
-                    .url("http://ieeeguc.org/api/meeting/{"+id+"}")
+                    .url("http://ieeeguc.org/api/meeting/"+id)
                     .addHeader("Authorization", accessToken)
                     .header("user_agent","Android")
                     .build();
@@ -151,7 +150,7 @@ public class Meeting {
                     response.close();
                 }
             });
-        
+
 
     }
 }
