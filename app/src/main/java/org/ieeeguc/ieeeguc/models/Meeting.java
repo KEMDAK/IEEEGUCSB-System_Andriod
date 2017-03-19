@@ -122,14 +122,10 @@ public class Meeting {
 
         try{
             OkHttpClient client = new OkHttpClient();
-            JSONObject jsonBody = new JSONObject();
-            jsonBody.put("id",id);
-            RequestBody body = RequestBody.create(CONTENT_TYPE, jsonBody.toString());
             Request request=new Request.Builder()
                     .url("http://ieeeguc.org/api/meeting/"+id)
                     .addHeader("Authorization", accessToken)
                     .header("user_agent","Android")
-                    .post(body)
                     .build();
             client.newCall(request).enqueue(new Callback() {
                 public void onFailure(Call call, IOException e) {
