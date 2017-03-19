@@ -120,7 +120,7 @@ public class Meeting {
     public static void delete(int id ,String accessToken,final HTTPResponse HTTP_RESPONSE){
 
 
-        try{
+
             OkHttpClient client = new OkHttpClient();
             Request request=new Request.Builder()
                     .url("http://ieeeguc.org/api/meeting/{"+id+"}")
@@ -151,9 +151,7 @@ public class Meeting {
                     response.close();
                 }
             });
-        }catch(JSONException e){
-            HTTP_RESPONSE.onFailure(-1,null);
-        }
+        
 
     }
 }
