@@ -2,8 +2,6 @@ package org.ieeeguc.ieeeguc.fragments.user;
 
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -41,7 +39,7 @@ public class UserShow extends Fragment {
     String phone_number="";
     String birthdate="";
     int IEEE_membership_ID=0;
-    View view;
+    //JSONObject settings ;
 
 
     @Override
@@ -50,40 +48,44 @@ public class UserShow extends Fragment {
         // Inflate the layout for this fragment
 
 
-        view = inflater.inflate(R.layout.fragment_user_show, container, false);
-        final int logged_id = new Gson().fromJson(getArguments().getString("user_id"),Integer.class);
-        String token  = new Gson().fromJson(getArguments().getString("token"),String.class);
-        MainActivity.loggedInUser.getUser(token,logged_id, new HTTPResponse() {
+        final View view = inflater.inflate(R.layout.fragment_user_show, container, false);
+
+
+        //  final int id = new Gson().fromJson(getArguments().getString("user_id"),Integer.class);
+        // String token  = new Gson().fromJson(getArguments().getString("token"),String.class);
+        MainActivity.loggedInUser.getUser(MainActivity.token,MainActivity.loggedInUser.getId(), new HTTPResponse() {
             @Override
             public void onSuccess(int statusCode, JSONObject body) {
                 try {
-                     JSONObject j = body.getJSONObject("user");
-                     id=j.getInt("id");
-                     type= j.getString("type");
-                     first_name  = j.getString("first_name");
-                     last_name= j.getString("last_name");
-                     email= j.getString("email");
-                     gender= j.getString("gender");
-                     phone_number= j.getString("phone_number");
-                     birthdate= j.getString("birthdate");
-                     IEEE_membership_ID = j.getInt("IEEE_membership_ID");
+                    JSONObject j = body.getJSONObject("result");
+                    id = j.getInt("id");
+                    type = j.getString("type");
+                    first_name  = j.getString("first_name");
+                    last_name = j.getString("last_name");
+                    email = j.getString("email");
+                    gender = j.getString("gender");
+                    phone_number = j.getString("phone_number");
+                    birthdate = j.getString("birthdate");
+                    IEEE_membership_ID = j.getInt("IEEE_membership_ID");
+                    //settings = j.getJSONObject("setting");
 
 
-                            ((TextView) view.findViewById(R.id.name)).setText(first_name + " " + last_name);
-                            ((TextView) view.findViewById(R.id.email)).setText(email);
-                            ((TextView) view.findViewById(R.id.id)).setText(id + "");
-                            ((TextView) view.findViewById(R.id.ieeemsh_id)).setText(IEEE_membership_ID + "");
-                            ((TextView) view.findViewById(R.id.phone)).setText(phone_number);
-                            ((TextView) view.findViewById(R.id.type)).setText(type);
-                            ((TextView) view.findViewById(R.id.bdate)).setText(birthdate);
-                            ((TextView) view.findViewById(R.id.gender)).setText(gender);
 
 
                 } catch (Exception e) {
 
-                    MainActivity.createSnackBar(getString(R.string.error_server_down));
+                    MainActivity.createSnackBar("");
                 }
 
+                ((TextView) view.findViewById(R.id.name)).setText(first_name+" "+last_name);
+                ((TextView) view.findViewById(R.id.email)).setText(email);
+                ((TextView) view.findViewById(R.id.id)).setText(id+"");
+                ((TextView) view.findViewById(R.id.ieeemsh_id)).setText(IEEE_membership_ID+"");
+                ((TextView) view.findViewById(R.id.phone)).setText(phone_number);
+                ((TextView) view.findViewById(R.id.type)).setText(type);
+
+                ((TextView) view.findViewById(R.id.bdate)).setText(birthdate);
+                ((TextView) view.findViewById(R.id.gender)).setText(gender);
             }
 
             @Override
@@ -94,7 +96,7 @@ public class UserShow extends Fragment {
                 }
                 else if(statusCode == 400)
                 {
-                    //don't know what message to pass
+                    //don't remember which message
                     MainActivity.createSnackBar("");
                 }else if(statusCode == 500)
                 {

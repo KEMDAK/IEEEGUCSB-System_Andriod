@@ -62,6 +62,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, userIndex).commit();
 */
     }
+
     /**
      * This method is called when the user clicks the log out item from the slide menu.
      * It logs the user out , redirect him to the login screen, and clears the sharePreferences.
@@ -141,16 +142,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
             //When the Show user navigation item is clicked show user info
             UserShow userShow = new UserShow();
-
-            // adding the variables to the fragment
-
-            Bundle bundle = new Bundle();
-            bundle.putString("user_id", new Gson().toJson(loggedInUser.getId()));
-            bundle.putString("token", new Gson().toJson(token));
-            userShow.setArguments(bundle);
-
             // adding the fragment to the mainContainer
-
             getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, userShow).commit();
         }
 
