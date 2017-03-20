@@ -6,6 +6,7 @@ import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+<<<<<<< HEAD
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +17,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+=======
+import java.util.ArrayList;
+import java.util.Date;
+
+>>>>>>> 256aa2f5422071c237542dd226c7f3f978915cf9
 public class Meeting {
 
     private int id;
@@ -40,7 +46,6 @@ public class Meeting {
                    User supervisor, Date created_at, Date updated_at) {
 
         this.id = id;
-
         this.start_date = start_date;
         this.end_Date = end_Date;
         this.goals = goals;
