@@ -92,7 +92,7 @@ public class Committee {
 
     }
 
-    /**
+    /*
      * This function gets the information of a specific committee from the database.
      * @param {String} token [token of the user]
      * @param {int} id [id of the committee]

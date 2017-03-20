@@ -13,7 +13,6 @@ import org.ieeeguc.ieeeguc.R;
  * A simple {@link Fragment} subclass.
  */
 public class UserShow extends Fragment {
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
