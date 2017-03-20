@@ -16,7 +16,6 @@ import com.google.gson.Gson;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
-import org.ieeeguc.ieeeguc.fragments.user.UserIndex;
 import org.ieeeguc.ieeeguc.fragments.user.UserShow;
 import org.ieeeguc.ieeeguc.fragments.user.UserUpdate;
 import org.ieeeguc.ieeeguc.models.User;
@@ -136,7 +135,6 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
             // When the logout navigation item is clicked logs out .
             logout();
-
         }
         else if(id==R.id.user_show_item) {
 

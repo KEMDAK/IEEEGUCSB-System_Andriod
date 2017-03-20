@@ -16,7 +16,6 @@
             android:checked="false"
             android:title="Show User "/>
 
-
         <item
             android:id="@+id/User_Update"
             android:checked="false"

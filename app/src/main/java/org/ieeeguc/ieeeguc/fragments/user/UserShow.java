@@ -1,29 +1,15 @@
 package org.ieeeguc.ieeeguc.fragments.user;
-
-
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.google.gson.Gson;
-
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
 import org.ieeeguc.ieeeguc.controllers.MainActivity;
-import org.ieeeguc.ieeeguc.models.User;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static org.ieeeguc.ieeeguc.controllers.MainActivity.*;
-import static org.ieeeguc.ieeeguc.models.User.getUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,10 +35,6 @@ public class UserShow extends Fragment {
 
 
         final View view = inflater.inflate(R.layout.fragment_user_show, container, false);
-
-
-        //  final int id = new Gson().fromJson(getArguments().getString("user_id"),Integer.class);
-        // String token  = new Gson().fromJson(getArguments().getString("token"),String.class);
         MainActivity.loggedInUser.getUser(MainActivity.token,MainActivity.loggedInUser.getId(), new HTTPResponse() {
             @Override
             public void onSuccess(int statusCode, JSONObject body) {
@@ -74,7 +56,7 @@ public class UserShow extends Fragment {
 
                 } catch (Exception e) {
 
-                    MainActivity.createSnackBar("");
+                    MainActivity.createSnackBar(getString(R.string.error_server_down));
                 }
 
                 ((TextView) view.findViewById(R.id.name)).setText(first_name+" "+last_name);

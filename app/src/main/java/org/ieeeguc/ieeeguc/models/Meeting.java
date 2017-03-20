@@ -3,12 +3,9 @@ package org.ieeeguc.ieeeguc.models;
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -119,6 +116,18 @@ public class Meeting {
             this.rating = rating;
         }
     }
+    /**
+     * This method is called to edit meeting info.
+     * @param  {Date}        startDate         [starting time]
+     * @param  {Date}        endDate         [ending time]
+     * @param  {String}        location         [location where the meeting is]
+     * @param  {String}        goals         [goals of the meeting]
+     * @param  {String}        description         [description about the topics]
+     * @param  {int []}        attendees         [list of attendees ids]
+     * @param  {String}        token         [token of the user]
+     * @param  {HTTPResponse}  HTTP_RESPONSE  [HTTP_RESPONSE interface instance]
+     * @return {void}
+     */
 
     public void edit(Date startDate,Date endDate,String location,String goals,String description,int[] attendees,String token,int id,final HTTPResponse HTTP_RESPONSE){
         OkHttpClient client = new OkHttpClient();
