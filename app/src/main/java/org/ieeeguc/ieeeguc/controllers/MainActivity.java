@@ -12,8 +12,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.gson.Gson;
+
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
+import org.ieeeguc.ieeeguc.fragments.user.UserShow;
 import org.ieeeguc.ieeeguc.fragments.user.UserUpdate;
 import org.ieeeguc.ieeeguc.models.User;
 import org.json.JSONObject;
@@ -133,9 +136,12 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             // When the logout navigation item is clicked logs out .
             logout();
         }
-        else if(id == R.id.User_Update){
-            UserUpdate updateFragment = new UserUpdate();
-            getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, updateFragment).commit();
+        else if(id==R.id.user_show_item) {
+
+            //When the Show user navigation item is clicked show user info
+            UserShow userShow = new UserShow();
+            // adding the fragment to the mainContainer
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, userShow).commit();
         }
 
         // Closes the drawer menu after the item is selected.
@@ -143,5 +149,4 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 }
