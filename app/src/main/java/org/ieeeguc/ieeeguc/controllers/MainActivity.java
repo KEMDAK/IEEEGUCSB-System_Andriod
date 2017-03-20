@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
@@ -26,6 +28,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
     public static User loggedInUser;
     public static String token;
+    public static Handler UIHandler;
     private static Context context;
 
     private NavigationView navigationView;
@@ -35,8 +38,9 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // setting the context
+        // setting the static variables
         context = this;
+        UIHandler = new Handler(Looper.getMainLooper());
 
         // Sets the class to be a listener to the navigation menu.
         navigationView = (NavigationView) findViewById(R.id.navigation_view);

@@ -103,7 +103,7 @@ public class UserStore extends Fragment {
             return;
 
         /* calling the API */
-        MainActivity.loggedInUser.addUser(MainActivity.token, memberType, memberEmail, "123456", memberFirstName, memberLastName, memberBirthDate, memberPhoneNumber, memberGender, ieeeMemberShipID, new HTTPResponse() {
+        MainActivity.loggedInUser.addUser(MainActivity.token, memberType, memberEmail, memberFirstName, memberLastName, memberBirthDate, memberPhoneNumber, memberGender, ieeeMemberShipID, new HTTPResponse() {
             public void onSuccess(int statusCode, JSONObject body) {
                 MainActivity.createSnackBar("User is created Successfully");
                 resetForm();
