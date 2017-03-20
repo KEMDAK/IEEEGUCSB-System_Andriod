@@ -12,6 +12,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.gson.Gson;
+
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
 import org.ieeeguc.ieeeguc.fragments.user.UserIndex;
@@ -142,10 +144,10 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
             // adding the variables to the fragment
 
-            //  Bundle bundle = new Bundle();
-            //  bundle.putString("user_id", new Gson().toJson(loggedInUser.getId()));
-            //  bundle.putString("token", new Gson().toJson(token));
-            // userShow.setArguments(bundle);
+            Bundle bundle = new Bundle();
+            bundle.putString("user_id", new Gson().toJson(loggedInUser.getId()));
+            bundle.putString("token", new Gson().toJson(token));
+            userShow.setArguments(bundle);
 
             // adding the fragment to the mainContainer
 
