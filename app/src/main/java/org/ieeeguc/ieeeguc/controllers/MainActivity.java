@@ -124,24 +124,24 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.home_item) {
+        if (id == R.id.home) {
 
             // Handle the home action
 
-        } else if (id == R.id.log_out_item) {
+        } else if (id == R.id.log_out) {
 
             // When the logout navigation item is clicked logs out .
             logout();
 
         }
-        else if(id==R.id.user_Creation) {
+        else if(id == R.id.user_store) {
             //When the Show user navigation item is clicked show user info
-            UserStore userCreation = new UserStore();
+            UserStore userStore = new UserStore();
 
             // adding the fragment to the mainContainer
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, userCreation).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, userStore).commit();
         }
-        else if(id == R.id.User_Update) {
+        else if(id == R.id.user_update) {
             UserUpdate updateFragment = new UserUpdate();
             getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, updateFragment).commit();
         }
