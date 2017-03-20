@@ -1,7 +1,6 @@
 package org.ieeeguc.ieeeguc.models;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -93,59 +92,6 @@ public class Committee {
 
     }
 
-    /**
-<<<<<<< HEAD
-     * This Method is used to create a new committee
-     * @param {string} token [token of the logged in user]
-     * @param {string} name [name of the committee]
-     * @param {string} description [description of the committee]
-     * @param {HttpResponse} HTTP_RESPONSE [http interface instance which is the response coming from the server after creating the new committee]
-     * @return {void}
-     */
-
-    public static void addCommittee(String token,String name,String description,final HTTPResponse HTTP_RESPONSE) {
-        OkHttpClient client = new OkHttpClient();
-        JSONObject j = new JSONObject();
-        try {
-            j.put("name", name);
-            j.put("description", description);
-            RequestBody body = RequestBody.create(CONTENT_TYPE, j.toString());
-            Request request = new Request.Builder()
-                    .url("http://ieeeguc.org/api/committee")
-                    .header("user_agent", "Android")
-                    .header("Authorization", token)
-                    .post(body)
-                    .build();
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    HTTP_RESPONSE.onFailure(-1, null);
-                    call.cancel();
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) {
-
-                    int code = response.code();
-                    String body = null;
-                    try {
-                        JSONObject j = new JSONObject(body);
-                        if (code / 100 == 2) {
-                            HTTP_RESPONSE.onSuccess(code, j);
-                        } else {
-                            HTTP_RESPONSE.onSuccess(code, j);
-                        }
-                    } catch (Exception e) {
-                        HTTP_RESPONSE.onFailure(500, null);
-                    }
-
-                    response.close();
-                }
-            });
-        } catch (JSONException e) {
-            HTTP_RESPONSE.onFailure(500, null);
-        }
-    }
     /*
      * This function gets the information of a specific committee from the database.
      * @param {String} token [token of the user]

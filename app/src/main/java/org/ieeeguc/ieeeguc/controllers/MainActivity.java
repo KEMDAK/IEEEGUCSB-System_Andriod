@@ -14,7 +14,6 @@ import android.view.View;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
-import org.ieeeguc.ieeeguc.fragments.user.UserShow;
 import org.ieeeguc.ieeeguc.fragments.user.UserStore;
 import org.ieeeguc.ieeeguc.fragments.user.UserUpdate;
 import org.ieeeguc.ieeeguc.models.User;
@@ -48,19 +47,22 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         // creating the fragment instance
         UserIndex userIndex = new UserIndex();
 
+        // adding the needed variables to it
+         User[] users = new User[1];
+         users[0] = loggedInUser;
+         Bundle bundle = new Bundle();
+         bundle.putString("users", new Gson().toJson(users));
+         userIndex.setArguments(bundle);
+
         // adding the fragment to the mainContainer
         getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, userIndex).commit();
 */
-
     }
 
     /**
      * This method is called when the user clicks the log out item from the slide menu.
      * It logs the user out , redirect him to the login screen, and clears the sharePreferences.
      */
-
-
-
     public static void logout() {
 
         HTTPResponse logoutHTTPResponse = new HTTPResponse() {
@@ -131,12 +133,6 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             // When the logout navigation item is clicked logs out .
             logout();
 
-        } else if(id==R.id.user_show) {
-            //When the Show user navigation item is clicked show user info
-            UserShow userShow = new UserShow();
-
-            // adding the fragment to the mainContainer
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, userShow).commit();
         }
         else if(id==R.id.user_Creation) {
             //When the Show user navigation item is clicked show user info
@@ -155,4 +151,5 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }

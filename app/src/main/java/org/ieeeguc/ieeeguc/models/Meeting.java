@@ -6,7 +6,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -20,6 +19,7 @@ import okhttp3.RequestBody;
 
 public class Meeting {
 
+    public static final MediaType CONTENT_TYPE = MediaType.parse("application/json; charset=utf-8");
     private int id;
     private Date start_date;
     private Date end_Date;
@@ -32,10 +32,6 @@ public class Meeting {
     private User supervisor;
     private Date created_at;
     private Date updated_at;
-    public static final MediaType CONTENT_TYPE = MediaType.parse("application/json; charset=utf-8");
-
-
-
 
     public Meeting(int id, Date start_date, Date end_Date, JSONObject goals,
                    int duration, String location, String description,
@@ -106,7 +102,18 @@ public class Meeting {
         return id;
     }
 
-    public static void addMeeting(String userToken,String startDate ,String endDate, String location, String[] goals,String description,int [] attendees , final HTTPResponse HTTP_RESPONSE){
+    /**
+     * this method is called when a user of Type at least Upper Board wants to create a meeting in the Database
+     * @param {String} userToken [token of the requesting user]
+     * @param {Date} startDate , endDate [StartDate and EndDate of the Meeting]
+     * @param {String} location [Location of the Meeting]
+     * @param {Array of Strings} goals [the goals of the Meeting]
+     * @param {String} description [Description of the Meeting]
+     * @param {Array of Integers} attendees [the ids of the attendees of the Meeting]
+     * @param {HTTPResponse} HTTP_RESPONSE [HTTPResponse interface instance]
+     * @return {void}
+     */
+    public static void addMeeting(String userToken,Date startDate , Date endDate, String location, String[] goals, String description, int [] attendees , final HTTPResponse HTTP_RESPONSE){
 
         OkHttpClient client= new OkHttpClient();
         JSONObject jsonBody = new JSONObject();
