@@ -1,9 +1,17 @@
 package org.ieeeguc.ieeeguc.models;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 public class Meeting {
 
@@ -103,6 +111,28 @@ public class Meeting {
             this.review = review;
             this.rating = rating;
         }
+    }
+
+    public void rate(String token,int id, int rating,  boolean [] goals  , JSONArray attendees){
+        OkHttpClient client= new OkHttpClient();
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("evaluation",rating);
+            jsonBody.put("goals",goals);
+            jsonBody.put("attendees",attendees);
+            String url = "http://ieeeguc.org/api/meeting/"+ id +"/rate";
+            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonBody.toString());
+            Request request=new Request.Builder()
+                    .url("http://ieeeguc.org/api/User")
+                    .addHeader("Authorization",token)
+                    .addHeader("user_agent","Android")
+                    .post(body)
+                    .build();
+        } catch (JSONException e) {
+
+        }
+
+
     }
 }
 
