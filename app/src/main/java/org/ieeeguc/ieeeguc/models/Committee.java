@@ -1,6 +1,7 @@
 package org.ieeeguc.ieeeguc.models;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
+import org.ieeeguc.ieeeguc.controllers.MainActivity;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -92,7 +93,7 @@ public class Committee {
 
     }
 
-    /**
+    /*
      * This function gets the information of a specific committee from the database.
      * @param {String} token [token of the user]
      * @param {int} id [id of the committee]
@@ -135,6 +136,13 @@ public class Committee {
         });
     }
 
+    /**
+     * This method edits a specific committee.
+     * @param {String} token [user's access token]
+     * @param {String} name [committee's name]
+     * @param {String} description [committee's description]
+     * @param {HTTPResponse} HTTP_RESPONSE [HTTPResponse interface instance]
+     */
     public void edit(String token, final String name, final String description, final HTTPResponse HTTP_RESPONSE) {
         HashMap<String, String> map = new HashMap<>();
         map.put("name", name);
@@ -153,31 +161,46 @@ public class Committee {
             @Override
             public void onFailure(Call call, IOException e) {
                 /* connection error */
-                HTTP_RESPONSE.onFailure(-1, null);
+                MainActivity.UIHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        HTTP_RESPONSE.onFailure(-1, null);
+                    }
+                });
                 call.cancel();
             }
 
             @Override
             public void onResponse(Call call, Response response){
                 /* successfull API call */
-                int statusCode = response.code();
+                final int statusCode = response.code();
 
                 try {
                     String body = response.body().string();
-                    JSONObject bodyJSON = new JSONObject(body);
+                    final JSONObject bodyJSON = new JSONObject(body);
 
-                    if (statusCode / 100 == 2) {
-                        /* updating the local data */
-                        committee.name = name;
-                        committee.description = description;
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (statusCode / 100 == 2) {
+                                 /* updating the local data */
+                                committee.name = name;
+                                committee.description = description;
 
-                        HTTP_RESPONSE.onSuccess(statusCode, bodyJSON);
-                    }
-                    else {
-                        HTTP_RESPONSE.onFailure(statusCode, bodyJSON);
-                    }
+                                HTTP_RESPONSE.onSuccess(statusCode, bodyJSON);
+                            }
+                            else {
+                                HTTP_RESPONSE.onFailure(statusCode, bodyJSON);
+                            }
+                        }
+                    });
                 } catch (Exception e) {
-                    HTTP_RESPONSE.onFailure(500, null);
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            HTTP_RESPONSE.onFailure(500, null);
+                        }
+                    });
                 }
 
                 response.close();
