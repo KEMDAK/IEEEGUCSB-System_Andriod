@@ -2,6 +2,7 @@ package org.ieeeguc.ieeeguc.models;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.json.JSONException;
+import org.ieeeguc.ieeeguc.controllers.MainActivity;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -15,7 +16,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import static org.ieeeguc.ieeeguc.models.User.CONTENT_TYPE;
 
 public class Committee {
 
@@ -93,7 +93,6 @@ public class Committee {
         });
 
     }
-
     /**
      * This Method is used to create a new committee
      * @param {string} token [token of the logged in user]
@@ -119,35 +118,54 @@ public class Committee {
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
                     HTTP_RESPONSE.onFailure(-1, null);
+                        }});
                     call.cancel();
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) {
 
-                    int code = response.code();
+                    final int code = response.code();
                     String body = null;
                     try {
-                        JSONObject j = new JSONObject(body);
-                        if (code / 100 == 2) {
-                            HTTP_RESPONSE.onSuccess(code, j);
-                        } else {
-                            HTTP_RESPONSE.onSuccess(code, j);
-                        }
+                        final JSONObject j = new JSONObject(body);
+                        MainActivity.UIHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (code / 100 == 2) {
+                                    HTTP_RESPONSE.onSuccess(code, j);
+                                } else {
+                                    HTTP_RESPONSE.onSuccess(code, j);
+                                }
+                            }});
                     } catch (Exception e) {
-                        HTTP_RESPONSE.onFailure(500, null);
+                        MainActivity.UIHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                HTTP_RESPONSE.onFailure(500, null);
+                            }});
                     }
 
                     response.close();
                 }
             });
         } catch (JSONException e) {
-            HTTP_RESPONSE.onFailure(500, null);
+            MainActivity.UIHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    HTTP_RESPONSE.onFailure(500, null);
+                }});
         }
     }
 
 /*
+=======
+    /*
+>>>>>>> c5addcec2f20ce18e115d3e34c660d4d40a3c721
      * This function gets the information of a specific committee from the database.
      * @param {String} token [token of the user]
      * @param {int} id [id of the committee]
@@ -190,6 +208,13 @@ public class Committee {
         });
     }
 
+    /**
+     * This method edits a specific committee.
+     * @param {String} token [user's access token]
+     * @param {String} name [committee's name]
+     * @param {String} description [committee's description]
+     * @param {HTTPResponse} HTTP_RESPONSE [HTTPResponse interface instance]
+     */
     public void edit(String token, final String name, final String description, final HTTPResponse HTTP_RESPONSE) {
         HashMap<String, String> map = new HashMap<>();
         map.put("name", name);
@@ -208,31 +233,46 @@ public class Committee {
             @Override
             public void onFailure(Call call, IOException e) {
                 /* connection error */
-                HTTP_RESPONSE.onFailure(-1, null);
+                MainActivity.UIHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        HTTP_RESPONSE.onFailure(-1, null);
+                    }
+                });
                 call.cancel();
             }
 
             @Override
             public void onResponse(Call call, Response response){
                 /* successfull API call */
-                int statusCode = response.code();
+                final int statusCode = response.code();
 
                 try {
                     String body = response.body().string();
-                    JSONObject bodyJSON = new JSONObject(body);
+                    final JSONObject bodyJSON = new JSONObject(body);
 
-                    if (statusCode / 100 == 2) {
-                        /* updating the local data */
-                        committee.name = name;
-                        committee.description = description;
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (statusCode / 100 == 2) {
+                                 /* updating the local data */
+                                committee.name = name;
+                                committee.description = description;
 
-                        HTTP_RESPONSE.onSuccess(statusCode, bodyJSON);
-                    }
-                    else {
-                        HTTP_RESPONSE.onFailure(statusCode, bodyJSON);
-                    }
+                                HTTP_RESPONSE.onSuccess(statusCode, bodyJSON);
+                            }
+                            else {
+                                HTTP_RESPONSE.onFailure(statusCode, bodyJSON);
+                            }
+                        }
+                    });
                 } catch (Exception e) {
-                    HTTP_RESPONSE.onFailure(500, null);
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            HTTP_RESPONSE.onFailure(500, null);
+                        }
+                    });
                 }
 
                 response.close();

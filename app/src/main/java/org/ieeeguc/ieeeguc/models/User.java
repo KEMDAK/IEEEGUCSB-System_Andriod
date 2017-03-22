@@ -1,6 +1,7 @@
 package org.ieeeguc.ieeeguc.models;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
+import org.ieeeguc.ieeeguc.controllers.MainActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -193,14 +194,12 @@ public class User{
      * @param {HTTPResponse} HTTP_RESPONSE [HTTPResponse interface instance]
      * @return {void}
      */
-    public static void addUser(String userToken,String type ,String email ,String password , String firstName ,String lastName ,String birthDate, String phoneNumber,
-    String gender,String id , final HTTPResponse HTTP_RESPONSE){
+    public static void addUser(String userToken, String type, String email , String firstName, String lastName, String birthDate, String phoneNumber, String gender, String id, final HTTPResponse HTTP_RESPONSE) {
         OkHttpClient client= new OkHttpClient();
         JSONObject jsonBody = new JSONObject();
         try{
             jsonBody.put("type",type);
             jsonBody.put("email",email);
-            jsonBody.put("password",password);
             jsonBody.put("first_name",firstName);
             jsonBody.put("last_name",lastName);
             jsonBody.put("birthdate",birthDate);
@@ -209,37 +208,56 @@ public class User{
             jsonBody.put("IEEE_membership_ID",id);
 
             RequestBody body = RequestBody.create(CONTENT_TYPE, jsonBody.toString());
-        Request request=new Request.Builder()
-                .url("http://ieeeguc.org/api/User")
-                .addHeader("Authorization",userToken)
-                .addHeader("user_agent","Android")
-                .post(body)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-            public void onFailure(Call call, IOException e) {
-                HTTP_RESPONSE.onFailure(-1,null);
-                call.cancel();
-            }
-            public void onResponse(Call call, okhttp3.Response response)  {
-                try {
-                    String responseData = response.body().string();
-                    JSONObject json = new JSONObject(responseData);
-                    int x = response.code();
-                    String y = Integer.toString(x);
-                    if(y.charAt(0)== '2'){
-                        HTTP_RESPONSE.onSuccess(x,json);
-                    }
-                    else{
-                        HTTP_RESPONSE.onFailure(x,json);
-                    }
-                } catch (Exception e) {
-                    HTTP_RESPONSE.onFailure(500,null);
+            Request request=new Request.Builder()
+                    .url("http://ieeeguc.org/api/User")
+                    .addHeader("Authorization",userToken)
+                    .addHeader("user_agent","Android")
+                    .post(body)
+                    .build();
+            client.newCall(request).enqueue(new Callback() {
+                public void onFailure(Call call, IOException e) {
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            HTTP_RESPONSE.onFailure(-1,null);
+                        }
+                    });
+                    call.cancel();
                 }
-                response.close();
-            }
-        });
+                public void onResponse(Call call, okhttp3.Response response)  {
+                    try {
+                        String body = response.body().string();
+                        final JSONObject bodyJSON = new JSONObject(body);
+                        final int statusCode = response.code();
+                        MainActivity.UIHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(statusCode / 100 == 2){
+                                    HTTP_RESPONSE.onSuccess(statusCode, bodyJSON);
+                                }
+                                else{
+                                    HTTP_RESPONSE.onFailure(statusCode, bodyJSON);
+                                }
+                            }
+                        });
+                    } catch (Exception e) {
+                        MainActivity.UIHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                HTTP_RESPONSE.onFailure(500, null);
+                            }
+                        });
+                    }
+                    response.close();
+                }
+            });
         }catch(JSONException e){
-            HTTP_RESPONSE.onFailure(500,null);
+            MainActivity.UIHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    HTTP_RESPONSE.onFailure(500, null);
+                }
+            });
         }
     }
 
@@ -263,20 +281,29 @@ public class User{
                 HTTP_RESPONSE.onFailure(-1,null);
                 call.cancel();
             }
-            public void onResponse(Call call, okhttp3.Response response) throws IOException {
-                int code=response.code();
-                String c=code+"";
+            public void onResponse(Call call, final okhttp3.Response response) throws IOException {
+                final int code=response.code();
+                final String c=code+"";
                 String body=response.body().string();
                 try {
-                    JSONObject rr =new JSONObject(body);
+                    final JSONObject rr =new JSONObject(body);
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
                     if(c.charAt(0)=='2'){
                         HTTP_RESPONSE.onSuccess(code,rr);
 
                     }else {
-                        HTTP_RESPONSE.onFailure(code,rr);
+                        HTTP_RESPONSE.onFailure(code, rr);
+
                     }
+                        }});
                 }catch (JSONException e){
-                    HTTP_RESPONSE.onFailure(code,null);
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            HTTP_RESPONSE.onFailure(code, null);
+                        }});
                 }
 
                 response.close();
@@ -380,28 +407,36 @@ public class User{
             @Override
 
             public void onFailure(Call call, IOException e) {
-
-                HTTP_RESPONSE.onFailure(-1, null);
+                MainActivity.UIHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        HTTP_RESPONSE.onFailure(-1, null);
+                    }});
                 call.cancel();
             }
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, final Response response) throws IOException {
 
-                int code = response.code();
+                final int code = response.code();
                 String body = response.body().string();
 
                 try {
-                    JSONObject j = new JSONObject(body);
-                    if(code/100 == 2)
-                    {
-                        HTTP_RESPONSE.onSuccess(code,j);
-                    }
-                    else
-                    {
-                        HTTP_RESPONSE.onFailure(code,j);
-                    }
+                    final JSONObject j = new JSONObject(body);
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (code / 100 == 2) {
+                                HTTP_RESPONSE.onSuccess(code, j);
+                            } else {
+                                HTTP_RESPONSE.onFailure(code, j);
+                            }
+                        }});
                 } catch (JSONException e) {
-                    HTTP_RESPONSE.onFailure(500,null);
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            HTTP_RESPONSE.onFailure(500, null);
+                        }});
                 }
 
                 response.close();

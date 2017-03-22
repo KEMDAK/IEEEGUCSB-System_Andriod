@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
@@ -17,6 +19,7 @@ import com.google.gson.Gson;
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
 import org.ieeeguc.ieeeguc.fragments.user.UserShow;
+import org.ieeeguc.ieeeguc.fragments.user.UserStore;
 import org.ieeeguc.ieeeguc.fragments.user.UserUpdate;
 import org.ieeeguc.ieeeguc.models.User;
 import org.json.JSONObject;
@@ -28,6 +31,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
     public static User loggedInUser;
     public static String token;
+    public static Handler UIHandler;
     private static Context context;
 
     private NavigationView navigationView;
@@ -37,13 +41,13 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // setting the context
+        // setting the static variables
         context = this;
+        UIHandler = new Handler(Looper.getMainLooper());
 
         // Sets the class to be a listener to the navigation menu.
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
-
         /** testing starts here **/
         /*
         // Fragment usage illustration
@@ -51,11 +55,11 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         UserIndex userIndex = new UserIndex();
 
         // adding the needed variables to it
-        User[] users = new User[1];
-        users[0] = loggedInUser;
-        Bundle bundle = new Bundle();
-        bundle.putString("users", new Gson().toJson(users));
-        userIndex.setArguments(bundle);
+         User[] users = new User[1];
+         users[0] = loggedInUser;
+         Bundle bundle = new Bundle();
+         bundle.putString("users", new Gson().toJson(users));
+         userIndex.setArguments(bundle);
 
         // adding the fragment to the mainContainer
         getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, userIndex).commit();
@@ -127,21 +131,33 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.home_item) {
+        if (id == R.id.home) {
 
             // Handle the home action
 
-        } else if (id == R.id.log_out_item) {
+        } else if (id == R.id.log_out) {
 
             // When the logout navigation item is clicked logs out .
             logout();
         }
-        else if(id==R.id.user_show_item) {
+        else if(id==R.id.user_show) {
 
             //When the Show user navigation item is clicked show user info
             UserShow userShow = new UserShow();
             // adding the fragment to the mainContainer
             getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, userShow).commit();
+
+        }
+        else if(id == R.id.user_store) {
+            //When the Show user navigation item is clicked show user info
+            UserStore userStore = new UserStore();
+
+            // adding the fragment to the mainContainer
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, userStore).commit();
+        }
+        else if(id == R.id.user_update) {
+            UserUpdate updateFragment = new UserUpdate();
+            getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, updateFragment).commit();
         }
 
         // Closes the drawer menu after the item is selected.
@@ -149,4 +165,5 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }

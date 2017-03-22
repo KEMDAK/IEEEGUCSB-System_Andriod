@@ -85,10 +85,11 @@
             android:text="TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignLeft="@+id/committee_name"
-            android:layout_alignStart="@+id/committee_name"
-            android:id="@+id/ieeemsh_id" />
+            android:id="@+id/ieeemsh_id"
+            android:layout_below="@+id/phone"
+            android:layout_alignLeft="@+id/phone"
+            android:layout_alignStart="@+id/phone"
+            android:layout_marginTop="41dp" />
     </RelativeLayout>
 
 </FrameLayout>
