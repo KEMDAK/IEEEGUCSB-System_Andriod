@@ -3,6 +3,7 @@ package org.ieeeguc.ieeeguc.models;
 
 import android.media.session.MediaSession;
 import org.ieeeguc.ieeeguc.HTTPResponse;
+import org.ieeeguc.ieeeguc.controllers.MainActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -178,6 +179,12 @@ public class Meeting {
             this.rating = rating;
         }
     }
+    /**
+     * this method is called when a user of Type at least Upper Board wants to delte a meeting in the Database
+     * @param {String} accessToken [token of the requesting user]
+     * @param {HTTPResponse} HTTP_RESPONSE [HTTPResponse interface instance]
+     * @return {void}
+     */
     public void delete(String accessToken, final HTTPResponse HTTP_RESPONSE){
 
             OkHttpClient client = new OkHttpClient();
@@ -187,31 +194,60 @@ public class Meeting {
                     .addHeader("Authorization", accessToken)
                     .header("user_agent","Android")
                     .build();
-            client.newCall(request).enqueue(new Callback() {
-                public void onFailure(Call call, IOException e) {
-                    HTTP_RESPONSE.onFailure(-1,null);
-                    call.cancel();
-                }
-                @Override
-                public void onResponse(Call call, Response response) {
-                    try {
-                        String responseData = response.body().string();
-                        JSONObject json = new JSONObject(responseData);
-                        int response_code = response.code();
-                        String y = Integer.toString(response_code);
-                        if(y.charAt(0)== '2'){
-                            HTTP_RESPONSE.onSuccess(response_code,json);
-                        }
-                        else{
-                            HTTP_RESPONSE.onFailure(response_code,json);
-                        }
-                    } catch (Exception e) {
-                        HTTP_RESPONSE.onFailure(500,null);
-                    }
-                    response.close();
-                }
-            });
+        client.newCall(request).enqueue(new Callback() {
 
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+                MainActivity.UIHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        HTTP_RESPONSE.onFailure(-1, null);
+                    }
+                });
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response){
+
+                final int statusCode = response.code();
+
+                try {
+                    String y = response.body().string();
+                    final JSONObject bodyJSON = new JSONObject(y);
+
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            String y = Integer.toString(statusCode);
+                            if (y.charAt(0)== '2') {
+                                 /* updating the local data */
+
+
+                                HTTP_RESPONSE.onSuccess(statusCode, bodyJSON);
+                            }
+                            else {
+                                HTTP_RESPONSE.onFailure(statusCode, bodyJSON);
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    HTTP_RESPONSE.onFailure(500, null);
+
+
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            HTTP_RESPONSE.onFailure(500, null);
+                        }
+                    });
+
+                }
+
+                response.close();
+            }
+        });
 
     }
 }
