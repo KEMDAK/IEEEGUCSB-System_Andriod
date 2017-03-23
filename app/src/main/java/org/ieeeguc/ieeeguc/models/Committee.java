@@ -66,27 +66,51 @@ public class Committee {
             public void onFailure(Call call, IOException e) {
 
                 // No Internet connection.
-                HTTP_RESPONSE.onFailure(-1,null);
+                MainActivity.UIHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        HTTP_RESPONSE.onFailure(-1,null);
+                    }
+                });
                 call.cancel();
             }
 
             @Override
             public void onResponse(Call call, Response response){
 
-                int statusCode = response.code();
+                final int statusCode = response.code();
 
                 try{
                     String responseBody = response.body().string();
-                    JSONObject body = new JSONObject(responseBody);
+                    final JSONObject body = new JSONObject(responseBody);
                     if(statusCode >= 200 && statusCode < 300){
-                        HTTP_RESPONSE.onSuccess(statusCode,body);
+                        MainActivity.UIHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                HTTP_RESPONSE.onSuccess(statusCode,body);
+                            }
+                        });
                     }
                     else{
-                        HTTP_RESPONSE.onFailure(statusCode,body);
+                        MainActivity.UIHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                HTTP_RESPONSE.onFailure(statusCode,body);
+                            }
+                        });
                     }
 
                 } catch (Exception e) {
-                    HTTP_RESPONSE.onFailure(500,null);
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            HTTP_RESPONSE.onFailure(500,null);
+                        }
+                    });
                 }
             }
         });
