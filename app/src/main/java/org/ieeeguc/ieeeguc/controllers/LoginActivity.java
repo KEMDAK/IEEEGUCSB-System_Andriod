@@ -15,7 +15,6 @@ import com.google.gson.Gson;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.R;
-import org.ieeeguc.ieeeguc.models.Meeting;
 import org.ieeeguc.ieeeguc.models.User;
 import org.ieeeguc.ieeeguc.models.User.Gender;
 import org.ieeeguc.ieeeguc.models.User.Type;

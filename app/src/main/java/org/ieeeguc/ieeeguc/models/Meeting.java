@@ -3,10 +3,9 @@ package org.ieeeguc.ieeeguc.models;
 import android.util.Log;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
+import org.ieeeguc.ieeeguc.controllers.MainActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-<<<<<<< HEAD
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,12 +15,6 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
-=======
-import java.util.ArrayList;
-import java.util.Date;
-
->>>>>>> 256aa2f5422071c237542dd226c7f3f978915cf9
 public class Meeting {
 
     private int id;
@@ -79,7 +72,7 @@ public class Meeting {
             @Override
             public void onFailure(Call call, IOException e) {
 
-                httpResponse.onFailure(-1,null);
+                MainActivity.
                 call.cancel();
             }
 
