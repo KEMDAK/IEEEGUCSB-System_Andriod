@@ -203,12 +203,12 @@ public class Meeting {
      * @return {void}
      */
     public static void delete( int id,String accessToken, final HTTPResponse HTTP_RESPONSE){
-
             OkHttpClient client = new OkHttpClient();
             Request request=new Request.Builder()
                     .url("http://ieeeguc.org/api/meeting/"+id)
                     .addHeader("Authorization", accessToken)
                     .header("user_agent","Android")
+                    .delete()
                     .build();
         client.newCall(request).enqueue(new Callback() {
             public void onFailure(Call call, IOException e) {
@@ -248,6 +248,7 @@ public class Meeting {
                 response.close();
             }
         });
+
     }
 }
 
