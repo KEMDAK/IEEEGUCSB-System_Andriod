@@ -192,7 +192,8 @@ public class User{
                             public void run() {
                                 HTTP_RESPONSE.onFailure(500, null);
                             }
-                        });                    }
+                        });       
+                    }
                     response.close();
                 }
             });
