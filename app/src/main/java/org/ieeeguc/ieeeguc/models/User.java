@@ -461,28 +461,41 @@ public class User{
         ok.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                HTTP_RESPONSE.onFailure(-1, null);
+                MainActivity.UIHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        HTTP_RESPONSE.onFailure(-1,null);
+                    }
+                });
                 call.cancel();
             }
 
             @Override
             public void onResponse(Call call, Response response)  {
 
-                int code = response.code();
+                final int code = response.code();
 
                 try {
                     String body = response.body().string();
-                    JSONObject json = new JSONObject(body);
-                    if(code == 200)
-                    {
-                        HTTP_RESPONSE.onSuccess(code,json);
-                    }
-                    else
-                    {
-                        HTTP_RESPONSE.onFailure(code,json);
-                    }
+                    final JSONObject json = new JSONObject(body);
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(code ==200){
+                                HTTP_RESPONSE.onSuccess(code, json);
+                            }
+                            else{
+                                HTTP_RESPONSE.onFailure(code, json);
+                            }
+                        }
+                    });
                 } catch (Exception e) {
-                    HTTP_RESPONSE.onFailure(500,null);
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            HTTP_RESPONSE.onFailure(500, null);
+                        }
+                    });
                 }
 
                 response.close();

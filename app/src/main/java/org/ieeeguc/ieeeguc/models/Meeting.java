@@ -1,15 +1,20 @@
 package org.ieeeguc.ieeeguc.models;
 
+import org.ieeeguc.ieeeguc.controllers.MainActivity;
+
+
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.controllers.MainActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -193,6 +198,78 @@ public class Meeting {
             this.review = review;
             this.rating = rating;
         }
+    }
+
+    /**
+     * @param  {string} token  (token of the requesting user )
+     * @param  {int} id (the id of the meeting)
+     * @param {int} rating (the rating of the meting)
+     * @param {boolean Array} goals (boolean array that states if the goals of the meeting have been achived or not)
+     * @param {JSONArray} attendees (JSOnArray that have the ratings and review of every member of the meeting)
+     * @param {HttpResponse} HTTP_RESPONSE (http interface instance which is the response coming from the server after logging in containing info of the user in the Database)
+     */
+    public void rate(String token,int id, int rating,  boolean [] goals  , JSONArray attendees,final HTTPResponse HTTP_RESPONSE){
+        OkHttpClient client= new OkHttpClient();
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("evaluation",rating);
+            jsonBody.put("goals",goals);
+            jsonBody.put("attendees",attendees);
+            String url = "http://ieeeguc.org/api/meeting/"+ id +"/rate";
+            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonBody.toString());
+            Request request=new Request.Builder()
+                    .url("http://ieeeguc.org/api/User")
+                    .addHeader("Authorization",token)
+                    .addHeader("user_agent","Android")
+                    .post(body)
+                    .build();
+            client.newCall(request).enqueue(new Callback() {
+                public void onFailure(Call call, IOException e) {
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            HTTP_RESPONSE.onFailure(-1,null);
+                        }
+                    });
+                    call.cancel();
+                }
+                public void onResponse(Call call, okhttp3.Response response)  {
+                    try {
+                        String body = response.body().string();
+                        final JSONObject bodyJSON = new JSONObject(body);
+                        final int statusCode = response.code();
+                        MainActivity.UIHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(statusCode / 100 == 2){
+                                    HTTP_RESPONSE.onSuccess(statusCode, bodyJSON);
+                                }
+                                else{
+                                    HTTP_RESPONSE.onFailure(statusCode, bodyJSON);
+                                }
+                            }
+                        });
+                    } catch (Exception e) {
+                        MainActivity.UIHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                HTTP_RESPONSE.onFailure(500, null);
+                            }
+                        });
+                    }
+                    response.close();
+                }
+            });
+        } catch (JSONException e) {
+            MainActivity.UIHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    HTTP_RESPONSE.onFailure(500, null);
+                }
+            });
+        }
+
+
     }
 }
 
