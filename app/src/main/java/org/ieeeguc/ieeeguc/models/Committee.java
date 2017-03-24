@@ -94,13 +94,7 @@ public class Committee {
         });
 
     }
-
-
-
     /**
-
-    /*
->>>>>>> c5addcec2f20ce18e115d3e34c660d4d40a3c721
      * This function gets the information of a specific committee from the database.
      * @param {String} token [token of the user]
      * @param {int} id [id of the committee]
@@ -211,7 +205,6 @@ public class Committee {
                             HTTP_RESPONSE.onFailure(500, null);
                         }
                     });
-
                 }
 
                 response.close();
