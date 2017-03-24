@@ -1,7 +1,4 @@
 package org.ieeeguc.ieeeguc.models;
-
-
-import android.media.session.MediaSession;
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.controllers.MainActivity;
 import org.json.JSONArray;
@@ -185,10 +182,9 @@ public class Meeting {
      * @param {HTTPResponse} HTTP_RESPONSE [HTTPResponse interface instance]
      * @return {void}
      */
-    public void delete(String accessToken, final HTTPResponse HTTP_RESPONSE){
+    public void delete( int id,String accessToken, final HTTPResponse HTTP_RESPONSE){
 
             OkHttpClient client = new OkHttpClient();
-        final Meeting meeting = this;
             Request request=new Request.Builder()
                     .url("http://ieeeguc.org/api/meeting/"+id)
                     .addHeader("Authorization", accessToken)
@@ -209,33 +205,27 @@ public class Meeting {
             }
 
             @Override
-            public void onResponse(Call call, Response response){
-
-                final int statusCode = response.code();
-
+            public void onResponse(Call call, Response response)throws IOException{
+              final   int code=response.code();
+                final String y=code+"";
+                String body=response.body().string();
                 try {
-                    String y = response.body().string();
-                    final JSONObject bodyJSON = new JSONObject(y);
+
+                    final JSONObject r = new JSONObject(body);
 
                     MainActivity.UIHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            String y = Integer.toString(statusCode);
-                            if (y.charAt(0)== '2') {
-                                 /* updating the local data */
+                            if (y.charAt(0)==('2')) {
 
-
-                                HTTP_RESPONSE.onSuccess(statusCode, bodyJSON);
+                                HTTP_RESPONSE.onSuccess(code, r);
                             }
                             else {
-                                HTTP_RESPONSE.onFailure(statusCode, bodyJSON);
+                                HTTP_RESPONSE.onFailure(code, r);
                             }
                         }
                     });
                 } catch (Exception e) {
-                    HTTP_RESPONSE.onFailure(500, null);
-
-
                     MainActivity.UIHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -250,5 +240,6 @@ public class Meeting {
         });
 
     }
+
 }
 

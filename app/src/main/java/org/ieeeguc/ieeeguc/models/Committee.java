@@ -18,7 +18,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static org.ieeeguc.ieeeguc.models.User.CONTENT_TYPE;
 
 /**
  * Created by abdelrahmen on 16/02/17.

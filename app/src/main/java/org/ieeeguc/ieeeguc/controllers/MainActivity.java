@@ -45,6 +45,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         // Sets the class to be a listener to the navigation menu.
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
+        
         /** testing starts here **/
         /*
         // Fragment usage illustration
