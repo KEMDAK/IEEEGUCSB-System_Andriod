@@ -159,30 +159,51 @@ public class User{
                     .build();
             client.newCall(request).enqueue(new Callback() {
                 public void onFailure(Call call, IOException e) {
-                    HTTP_RESPONSE.onFailure(-1,null);
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            HTTP_RESPONSE.onFailure(-1,null);
+                        }
+                    });
                     call.cancel();
                 }
                 @Override
                 public void onResponse(Call call, Response response) {
                     try {
                         String responseData = response.body().string();
-                        JSONObject json = new JSONObject(responseData);
-                        int x = response.code();
-                        String y = Integer.toString(x);
-                        if(y.charAt(0)== '2'){
-                            HTTP_RESPONSE.onSuccess(x,json);
-                        }
-                        else{
-                            HTTP_RESPONSE.onFailure(x,json);
-                        }
+                        final JSONObject bodyJSON = new JSONObject(responseData);
+                        final int statusCode = response.code();
+                        final String y = Integer.toString(statusCode);
+                        MainActivity.UIHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(y.charAt(0)== '2'){
+                                    HTTP_RESPONSE.onSuccess(statusCode,bodyJSON);
+                                }
+                                else{
+                                    HTTP_RESPONSE.onFailure(statusCode,bodyJSON);
+                                }
+                            }
+                        });
+
                     } catch (Exception e) {
-                        HTTP_RESPONSE.onFailure(500,null);
+                        MainActivity.UIHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                HTTP_RESPONSE.onFailure(500, null);
+                            }
+                        });       
                     }
                     response.close();
                 }
             });
         }catch(JSONException e){
-            HTTP_RESPONSE.onFailure(-1,null);
+            MainActivity.UIHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    HTTP_RESPONSE.onFailure(500, null);
+                }
+            });
         }
 
     }
