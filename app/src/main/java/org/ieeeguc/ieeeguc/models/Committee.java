@@ -148,8 +148,6 @@ public class Committee {
             }
         });
     }
-
-
     /**
      * This method edits a specific committee.
      * @param {String} token [user's access token]

@@ -202,7 +202,7 @@ public class Meeting {
      * @param {HTTPResponse} HTTP_RESPONSE [HTTPResponse interface instance]
      * @return {void}
      */
-    public void delete( int id,String accessToken, final HTTPResponse HTTP_RESPONSE){
+    public static void delete( int id,String accessToken, final HTTPResponse HTTP_RESPONSE){
 
             OkHttpClient client = new OkHttpClient();
             Request request=new Request.Builder()
@@ -211,37 +211,29 @@ public class Meeting {
                     .header("user_agent","Android")
                     .build();
         client.newCall(request).enqueue(new Callback() {
-
-            @Override
             public void onFailure(Call call, IOException e) {
-
                 MainActivity.UIHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        HTTP_RESPONSE.onFailure(-1, null);
+                        HTTP_RESPONSE.onFailure(-1,null);
                     }
                 });
                 call.cancel();
             }
-
-            @Override
-            public void onResponse(Call call, Response response)throws IOException{
-              final   int code=response.code();
-                final String y=code+"";
-                String body=response.body().string();
+            public void onResponse(Call call, okhttp3.Response response)  {
                 try {
-
-                    final JSONObject r = new JSONObject(body);
-
+                    String body = response.body().string();
+                    final JSONObject bodyJSON = new JSONObject(body);
+                    final int statusCode = response.code();
+                    final String y = statusCode+"";
                     MainActivity.UIHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            if (y.charAt(0)==('2')) {
-
-                                HTTP_RESPONSE.onSuccess(code, r);
+                            if(y.charAt(0)== '2'){
+                                HTTP_RESPONSE.onSuccess(statusCode,bodyJSON);
                             }
-                            else {
-                                HTTP_RESPONSE.onFailure(code, r);
+                            else{
+                                HTTP_RESPONSE.onFailure(statusCode,bodyJSON);
                             }
                         }
                     });
@@ -252,14 +244,10 @@ public class Meeting {
                             HTTP_RESPONSE.onFailure(500, null);
                         }
                     });
-
                 }
-
                 response.close();
             }
         });
-
     }
-
 }
 

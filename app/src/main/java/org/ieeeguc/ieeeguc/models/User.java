@@ -297,27 +297,42 @@ public class User{
                 .addHeader("Authorization",token)
                 .addHeader("user_agent","Android")
                 .build();
+
         client.newCall(request).enqueue(new Callback() {
             public void onFailure(Call call, IOException e) {
-                HTTP_RESPONSE.onFailure(-1,null);
+                MainActivity.UIHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        HTTP_RESPONSE.onFailure(-1,null);
+                    }
+                });
                 call.cancel();
             }
-            public void onResponse(Call call, okhttp3.Response response) throws IOException {
-                int code=response.code();
-                String c=code+"";
-                String body=response.body().string();
+            public void onResponse(Call call, okhttp3.Response response)  {
                 try {
-                    JSONObject rr =new JSONObject(body);
-                    if(c.charAt(0)=='2'){
-                        HTTP_RESPONSE.onSuccess(code,rr);
-
-                    }else {
-                        HTTP_RESPONSE.onFailure(code,rr);
-                    }
-                }catch (JSONException e){
-                    HTTP_RESPONSE.onFailure(code,null);
+                    String body = response.body().string();
+                    final JSONObject bodyJSON = new JSONObject(body);
+                    final int statusCode = response.code();
+                    final String y = statusCode+"";
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(y.charAt(0)== '2'){
+                                HTTP_RESPONSE.onSuccess(statusCode,bodyJSON);
+                            }
+                            else{
+                                HTTP_RESPONSE.onFailure(statusCode,bodyJSON);
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            HTTP_RESPONSE.onFailure(500, null);
+                        }
+                    });
                 }
-
                 response.close();
             }
         });
