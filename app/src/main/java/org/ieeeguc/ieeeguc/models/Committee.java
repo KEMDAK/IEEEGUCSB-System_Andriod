@@ -94,6 +94,7 @@ public class Committee {
         });
 
     }
+    
     /**
      * This function gets the information of a specific committee from the database.
      * @param {String} token [token of the user]
@@ -136,6 +137,7 @@ public class Committee {
             }
         });
     }
+    
     /**
      * This method edits a specific committee.
      * @param {String} token [user's access token]
@@ -195,10 +197,7 @@ public class Committee {
                             }
                         }
                     });
-                } catch (Exception e) {
-    HTTP_RESPONSE.onFailure(500, null);
-
-
+                } catch (Exception e) {   
                     MainActivity.UIHandler.post(new Runnable() {
                         @Override
                         public void run() {
