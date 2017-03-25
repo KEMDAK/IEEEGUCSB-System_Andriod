@@ -1,7 +1,9 @@
 package org.ieeeguc.ieeeguc.models;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
+import org.json.JSONException;
 import org.ieeeguc.ieeeguc.controllers.MainActivity;
+
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -84,24 +86,17 @@ public class Committee {
                 try{
                     String responseBody = response.body().string();
                     final JSONObject body = new JSONObject(responseBody);
-                    if(statusCode >= 200 && statusCode < 300){
+
                         MainActivity.UIHandler.post(new Runnable() {
                             @Override
                             public void run() {
 
-                                HTTP_RESPONSE.onSuccess(statusCode,body);
+                                if(statusCode >= 200 && statusCode < 300)
+                                    HTTP_RESPONSE.onSuccess(statusCode,body);
+                                else
+                                    HTTP_RESPONSE.onFailure(statusCode,body);
                             }
                         });
-                    }
-                    else{
-                        MainActivity.UIHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                HTTP_RESPONSE.onFailure(statusCode,body);
-                            }
-                        });
-                    }
 
                 } catch (Exception e) {
                     MainActivity.UIHandler.post(new Runnable() {
@@ -116,8 +111,8 @@ public class Committee {
         });
 
     }
-
-    /*
+    
+    /**
      * This function gets the information of a specific committee from the database.
      * @param {String} token [token of the user]
      * @param {int} id [id of the committee]
@@ -159,7 +154,7 @@ public class Committee {
             }
         });
     }
-
+    
     /**
      * This method edits a specific committee.
      * @param {String} token [user's access token]
@@ -168,6 +163,7 @@ public class Committee {
      * @param {HTTPResponse} HTTP_RESPONSE [HTTPResponse interface instance]
      */
     public void edit(String token, final String name, final String description, final HTTPResponse HTTP_RESPONSE) {
+
         HashMap<String, String> map = new HashMap<>();
         map.put("name", name);
         map.put("description", description);
@@ -218,7 +214,7 @@ public class Committee {
                             }
                         }
                     });
-                } catch (Exception e) {
+                } catch (Exception e) {   
                     MainActivity.UIHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -230,5 +226,9 @@ public class Committee {
                 response.close();
             }
         });
+
     }
-}
+
+
+    }
+

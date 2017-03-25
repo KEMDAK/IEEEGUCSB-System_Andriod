@@ -1,11 +1,10 @@
 package org.ieeeguc.ieeeguc.models;
 
-import android.util.Log;
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.controllers.MainActivity;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONArray;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,10 +16,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
 public class Meeting {
 
     public static final MediaType CONTENT_TYPE = MediaType.parse("application/json; charset=utf-8");
     private int id;
+
     private Date start_date;
     private Date end_Date;
     private JSONObject goals;
@@ -93,7 +94,8 @@ public class Meeting {
                         public void run() {
                             if(statusCode/100 == 2)
                                 httpResponse.onSuccess(statusCode,responseBody);
-                            httpResponse.onFailure(statusCode,responseBody);
+                            else
+                                httpResponse.onFailure(statusCode,responseBody);
                         }
                     });
                 } catch (JSONException e) {
@@ -190,29 +192,49 @@ public class Meeting {
                     .build();
             client.newCall(request).enqueue(new Callback() {
                 public void onFailure(Call call, IOException e) {
-                    HTTP_RESPONSE.onFailure(-1,null);
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            HTTP_RESPONSE.onFailure(-1,null);
+                        }
+                    });
                     call.cancel();
                 }
                 public void onResponse(Call call, okhttp3.Response response)  {
                     try {
                         String responseData = response.body().string();
-                        JSONObject json = new JSONObject(responseData);
-                        int x = response.code();
-                        String y = Integer.toString(x);
-                        if(y.charAt(0)== '2'){
-                            HTTP_RESPONSE.onSuccess(x,json);
-                        }
-                        else{
-                            HTTP_RESPONSE.onFailure(x,json);
-                        }
+                        final JSONObject bodyJSON = new JSONObject(responseData);
+                        final int statusCode = response.code();
+                        final String y = Integer.toString(statusCode);
+                        MainActivity.UIHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(y.charAt(0)== '2'){
+                                    HTTP_RESPONSE.onSuccess(statusCode,bodyJSON);
+                                }
+                                else{
+                                    HTTP_RESPONSE.onFailure(statusCode,bodyJSON);
+                                }
+                            }
+                        });
                     } catch (Exception e) {
-                        HTTP_RESPONSE.onFailure(500,null);
+                        MainActivity.UIHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                HTTP_RESPONSE.onFailure(500, null);
+                            }
+                        });    
                     }
                     response.close();
                 }
             });
         }catch(JSONException e){
-            HTTP_RESPONSE.onFailure(500,null);
+            MainActivity.UIHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    HTTP_RESPONSE.onFailure(500, null);
+                }
+            });
         }
     }
 
@@ -227,6 +249,60 @@ public class Meeting {
             this.review = review;
             this.rating = rating;
         }
+    }
+    /**
+     * this method is called when a user of Type at least Upper Board wants to delte a meeting in the Database
+     * @param {String} accessToken [token of the requesting user]
+     * @param {HTTPResponse} HTTP_RESPONSE [HTTPResponse interface instance]
+     * @return {void}
+     */
+    public static void delete( int id,String accessToken, final HTTPResponse HTTP_RESPONSE){
+            OkHttpClient client = new OkHttpClient();
+            Request request=new Request.Builder()
+                    .url("http://ieeeguc.org/api/meeting/"+id)
+                    .addHeader("Authorization", accessToken)
+                    .header("user_agent","Android")
+                    .delete()
+                    .build();
+        client.newCall(request).enqueue(new Callback() {
+            public void onFailure(Call call, IOException e) {
+                MainActivity.UIHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        HTTP_RESPONSE.onFailure(-1,null);
+                    }
+                });
+                call.cancel();
+            }
+            public void onResponse(Call call, okhttp3.Response response)  {
+                try {
+                    String body = response.body().string();
+                    final JSONObject bodyJSON = new JSONObject(body);
+                    final int statusCode = response.code();
+                    final String y = statusCode+"";
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(y.charAt(0)== '2'){
+                                HTTP_RESPONSE.onSuccess(statusCode,bodyJSON);
+                            }
+                            else{
+                                HTTP_RESPONSE.onFailure(statusCode,bodyJSON);
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            HTTP_RESPONSE.onFailure(500, null);
+                        }
+                    });
+                }
+                response.close();
+            }
+        });
+
     }
 }
 
