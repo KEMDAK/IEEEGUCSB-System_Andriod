@@ -1,7 +1,9 @@
 package org.ieeeguc.ieeeguc.models;
 
 import org.ieeeguc.ieeeguc.HTTPResponse;
+import org.json.JSONException;
 import org.ieeeguc.ieeeguc.controllers.MainActivity;
+
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -92,8 +94,8 @@ public class Committee {
         });
 
     }
-
-    /*
+    
+    /**
      * This function gets the information of a specific committee from the database.
      * @param {String} token [token of the user]
      * @param {int} id [id of the committee]
@@ -135,7 +137,7 @@ public class Committee {
             }
         });
     }
-
+    
     /**
      * This method edits a specific committee.
      * @param {String} token [user's access token]
@@ -144,6 +146,7 @@ public class Committee {
      * @param {HTTPResponse} HTTP_RESPONSE [HTTPResponse interface instance]
      */
     public void edit(String token, final String name, final String description, final HTTPResponse HTTP_RESPONSE) {
+
         HashMap<String, String> map = new HashMap<>();
         map.put("name", name);
         map.put("description", description);
@@ -194,7 +197,7 @@ public class Committee {
                             }
                         }
                     });
-                } catch (Exception e) {
+                } catch (Exception e) {   
                     MainActivity.UIHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -206,5 +209,9 @@ public class Committee {
                 response.close();
             }
         });
+
     }
-}
+
+
+    }
+
