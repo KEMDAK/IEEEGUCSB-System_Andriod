@@ -368,7 +368,13 @@ public class User{
             public void onFailure(Call call, IOException e) {
 
                 //No Internet Connection.
-                HTTP_RESPONSE.onFailure(-1, null);
+                MainActivity.UIHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        HTTP_RESPONSE.onFailure(-1, null);
+                    }
+                });
+
                 call.cancel();
             }
 
@@ -376,7 +382,7 @@ public class User{
             public void onResponse(Call call, Response response){
 
                 //Getting the status code.
-                int statusCode = response.code();
+                final int statusCode = response.code();
                 String code = String.valueOf(statusCode);
 
                 if (code.charAt(0) == '2') {
@@ -385,12 +391,22 @@ public class User{
 
                     try {
 
-                        JSONObject responseBody = new JSONObject(response.body().string());
-                        HTTP_RESPONSE.onSuccess(statusCode, responseBody);
+                        final JSONObject responseBody = new JSONObject(response.body().string());
+                        MainActivity.UIHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                HTTP_RESPONSE.onSuccess(statusCode, responseBody);
+                            }
+                        });
 
                     } catch (Exception e) {
 
-                        HTTP_RESPONSE.onFailure(500, null);
+                        MainActivity.UIHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                HTTP_RESPONSE.onFailure(500, null);
+                            }
+                        });
                     }
 
                 } else {
@@ -399,11 +415,21 @@ public class User{
                     // and the call wasn't successful.
 
                     try {
-                        JSONObject responseBody = new JSONObject(response.body().string());
-                        HTTP_RESPONSE.onFailure(statusCode, responseBody);
+                        final JSONObject responseBody = new JSONObject(response.body().string());
+                        MainActivity.UIHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                HTTP_RESPONSE.onFailure(statusCode, responseBody);
+                            }
+                        });
                     } catch (Exception e) {
 
-                        HTTP_RESPONSE.onFailure(500, null);
+                        MainActivity.UIHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                HTTP_RESPONSE.onFailure(500, null);
+                            }
+                        });
                     }
 
                 }

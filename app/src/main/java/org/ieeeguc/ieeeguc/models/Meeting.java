@@ -1,15 +1,14 @@
 package org.ieeeguc.ieeeguc.models;
+
 import org.ieeeguc.ieeeguc.HTTPResponse;
 import org.ieeeguc.ieeeguc.controllers.MainActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -17,7 +16,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
 
 public class Meeting {
 
@@ -35,7 +33,6 @@ public class Meeting {
     private User supervisor;
     private Date created_at;
     private Date updated_at;
-
     public Meeting(int id, Date start_date, Date end_Date, JSONObject goals,
                    int duration, String location, String description,
                    int evaluation, ArrayList<Attendee> attendees,
@@ -53,8 +50,65 @@ public class Meeting {
         this.supervisor = supervisor;
         this.created_at = created_at;
         this.updated_at = updated_at;
+    }
 
+    /**
+     * This method is called when a user requests to see a meeting details.
+     * @param {int}          id            [Meeting id].
+     * @param {HTTPResponse} httpResponse  [Interface instance].
+     * @param {String}       token         [Authorization token].
+     */
+    public static void getMeeting(int id, final HTTPResponse httpResponse, String token){
 
+        String stringId = String.valueOf(id);
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .header("Authorization",token)
+                .header("user_agent","Android")
+                .url("http://ieeeguc.org/api/meeting/" + stringId)
+                .get()
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+                MainActivity.UIHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        httpResponse.onFailure(-1,null);
+                    }
+                });
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                try {
+                    String body = response.body().string();
+                    final JSONObject responseBody =  new JSONObject(body);
+                    final int statusCode = response.code();
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(statusCode/100 == 2)
+                                httpResponse.onSuccess(statusCode,responseBody);
+                            else
+                                httpResponse.onFailure(statusCode,responseBody);
+                        }
+                    });
+                } catch (JSONException e) {
+                    MainActivity.UIHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            httpResponse.onFailure(500,null);
+                        }
+                    });
+                }
+                response.close();
+            }
+        });
     }
 
     public Date getStart_date() {
