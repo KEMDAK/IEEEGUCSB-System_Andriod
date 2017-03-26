@@ -1,6 +1,7 @@
 package org.ieeeguc.ieeeguc.fragments.user;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import java.util.Date;
  * A simple {@link Fragment} subclass.
  */
 public class UserShow extends Fragment {
+    User u;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -26,25 +29,24 @@ public class UserShow extends Fragment {
         MainActivity.loggedInUser.getUser(MainActivity.token,MainActivity.loggedInUser.getId(), new HTTPResponse() {
             @Override
             public void onSuccess(int statusCode, JSONObject body) {
-                User u = null;
                 try {
-                    JSONObject j = body.getJSONObject("result");
+                    JSONObject j = body.getJSONObject("user");
 
                     int id = j.getInt("id");
-                   User.Type type = User.Type.valueOf(j.getString("type"));
+                   User.Type type = User.Type.valueOf(j.getString("type").toUpperCase());
                    String first_name  = j.getString("first_name");
                    String last_name = j.getString("last_name");
                    String email = j.getString("email");
-                   User.Gender gender = User.Gender.valueOf(j.getString("gender"));
+                   User.Gender gender = User.Gender.valueOf(j.getString("gender").toUpperCase());
                    String phone_number = j.getString("phone_number");
-                   String birthdate = j.getString("birthdate");
-                   int IEEE_membership_ID = j.getInt("IEEE_membership_ID");
+                    String birthdate = j.getString("birthdate");
+                   String IEEE_membership_ID = j.getString("IEEE_membership_ID");
                     JSONObject settings = j.getJSONObject("settings");
                     SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd");
                     Date date = formate.parse(birthdate);
 
                     u = new User(id,type,first_name, last_name,gender,email,date,
-                            IEEE_membership_ID+"", 0, null, phone_number,settings);
+                            IEEE_membership_ID, 0, null, phone_number,settings);
 
 
                     ((TextView) view.findViewById(R.id.name)).setText(u.getFirstName()+" "+u.getLastName());
@@ -59,7 +61,6 @@ public class UserShow extends Fragment {
                     ((TextView) view.findViewById(R.id.gender)).setText(u.getGender().toString());
 
                     } catch (Exception e) {
-
                     MainActivity.createSnackBar(getString(R.string.error_server_down));
                 }
 
@@ -71,7 +72,7 @@ public class UserShow extends Fragment {
                 if(statusCode == 401) {
                     MainActivity.logout();
                 }
-                else if(statusCode == 400)
+                else if(statusCode == 400 || statusCode == 403)
                 {
                     MainActivity.createSnackBar(getString(R.string.error_server_down));
                 }else if(statusCode == 500)

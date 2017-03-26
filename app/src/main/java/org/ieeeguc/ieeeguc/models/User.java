@@ -287,9 +287,6 @@ public class User{
                 String body=response.body().string();
                 try {
                     final JSONObject rr =new JSONObject(body);
-                    MainActivity.UIHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
                     if(c.charAt(0)=='2'){
                         HTTP_RESPONSE.onSuccess(code,rr);
 
@@ -297,13 +294,10 @@ public class User{
                         HTTP_RESPONSE.onFailure(code, rr);
 
                     }
-                        }});
+
                 }catch (JSONException e){
-                    MainActivity.UIHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
                             HTTP_RESPONSE.onFailure(code, null);
-                        }});
+
                 }
 
                 response.close();
