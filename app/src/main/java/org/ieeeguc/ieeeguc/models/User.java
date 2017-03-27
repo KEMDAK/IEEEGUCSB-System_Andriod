@@ -460,7 +460,7 @@ public class User{
                     MainActivity.UIHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            if(code ==200){
+                            if(code/100 ==2){
                                 HTTP_RESPONSE.onSuccess(code, json);
                             }
                             else{

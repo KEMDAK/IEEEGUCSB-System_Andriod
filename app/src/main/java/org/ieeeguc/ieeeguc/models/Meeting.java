@@ -181,15 +181,15 @@ public class Meeting {
 
     /**
      * @param  {string} token  (token of the requesting user )
-     * @param  {int} id (the id of the meeting)
      * @param {int} rating (the rating of the meting)
      * @param {boolean Array} goals (boolean array that states if the goals of the meeting have been achived or not)
      * @param {JSONArray} attendees (JSOnArray that have the ratings and review of every member of the meeting)
      * @param {HttpResponse} HTTP_RESPONSE (http interface instance which is the response coming from the server after logging in containing info of the user in the Database)
      */
-    public void rate(String token,int id, int rating,  boolean [] goals  , JSONArray attendees,final HTTPResponse HTTP_RESPONSE){
+    public void rate(String token,int rating,  boolean [] goals  , JSONArray attendees,final HTTPResponse HTTP_RESPONSE){
         OkHttpClient client= new OkHttpClient();
         JSONObject jsonBody = new JSONObject();
+        final boolean[] flag = {false};
         try {
             jsonBody.put("evaluation",rating);
             jsonBody.put("goals",goals);
@@ -197,7 +197,7 @@ public class Meeting {
             String url = "http://ieeeguc.org/api/meeting/"+ id +"/rate";
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonBody.toString());
             Request request=new Request.Builder()
-                    .url("http://ieeeguc.org/api/User")
+                    .url(url)
                     .addHeader("Authorization",token)
                     .addHeader("user_agent","Android")
                     .post(body)
@@ -217,11 +217,13 @@ public class Meeting {
                         String body = response.body().string();
                         final JSONObject bodyJSON = new JSONObject(body);
                         final int statusCode = response.code();
+
                         MainActivity.UIHandler.post(new Runnable() {
                             @Override
                             public void run() {
                                 if(statusCode / 100 == 2){
                                     HTTP_RESPONSE.onSuccess(statusCode, bodyJSON);
+                                    flag[0] = true ;
                                 }
                                 else{
                                     HTTP_RESPONSE.onFailure(statusCode, bodyJSON);
@@ -247,8 +249,21 @@ public class Meeting {
                 }
             });
         }
+        if(flag[0]){
+            this.evaluation = rating ;
+            for(int i = 0 ; i < this.attendees.size();i++){
+                try {
+                    JSONObject attendee = attendees.getJSONObject(i);
+                    int attendeeRating = attendee.getInt("rating") ;
+                    String attendeeReview = attendee.getString("review");
+                    this.attendees.get(i).rating =attendeeRating ;
+                    this.attendees.get(i).review = attendeeReview;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-
+            }
+        }
     }
 }
 
